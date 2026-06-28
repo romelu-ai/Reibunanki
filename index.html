@@ -117,19 +117,51 @@ nav { display:flex; gap:5px; flex-wrap:wrap; }
 .fill-card[data-lv="1"] { border:1.5px solid rgba(78,205,196,.4); }
 .fill-card[data-lv="2"] { border:1.5px solid rgba(245,158,11,.4); }
 .fill-card[data-lv="3"] { border:1.5px solid rgba(244,63,94,.4); }
-.fill-sentence { font-family:'Fira Code',monospace; font-size:1.05rem; line-height:2.6; color:var(--white); text-align:center; margin-bottom:16px; word-break:break-word; }
-.fill-blank { display:inline-flex; align-items:center; justify-content:center; border-radius:6px; padding:2px 6px; margin:0 1px; font-weight:700; position:relative; vertical-align:middle; cursor:pointer; transition:all .22s cubic-bezier(.4,0,.2,1); user-select:none; min-width:36px; }
-.fill-blank.hidden[data-lv="1"] { background:var(--lv1); color:var(--lv1); box-shadow:0 0 0 1.5px var(--lv1); }
-.fill-blank.hidden[data-lv="2"] { background:var(--lv2); color:var(--lv2); box-shadow:0 0 0 1.5px var(--lv2); }
-.fill-blank.hidden[data-lv="3"] { background:var(--lv3); color:var(--lv3); box-shadow:0 0 0 1.5px var(--lv3); }
-.fill-blank.hidden:hover { opacity:.8; transform:scale(1.06); }
+.fill-sentence {
+  font-family:'Fira Code',monospace; font-size:1.0rem; line-height:1;
+  color:var(--white); text-align:left; margin-bottom:16px;
+  display:flex; flex-wrap:wrap; gap:4px 2px; align-items:center;
+}
+/* 非ブランクのテキストチャンク */
+.fill-word { display:inline-flex; align-items:center; white-space:pre; line-height:2.2; }
+
+/* ブランク共通：サイズをコンテンツで決め、開く前後で変わらないように */
+.fill-blank {
+  display:inline-flex; align-items:center; justify-content:center;
+  border-radius:6px; padding:3px 7px; margin:0;
+  font-family:'Fira Code',monospace; font-size:1.0rem; font-weight:700;
+  cursor:pointer; user-select:none;
+  /* transition は色のみ・位置やサイズは変えない */
+  transition:background .18s, box-shadow .18s, color .18s;
+  white-space:nowrap; line-height:2.2;
+  /* タップ領域を広げる */
+  min-height:2em;
+}
+/* hidden: 答え文字列と同じ幅を確保するため visibility:hidden のダミーを重ねる手法 */
+.fill-blank.hidden { position:relative; }
+.fill-blank .blank-ghost {
+  /* 答えと同じ文字列を不可視で配置してサイズを確保 */
+  visibility:hidden; font-family:'Fira Code',monospace; font-size:1.0rem; font-weight:700; white-space:nowrap;
+}
+.fill-blank .blank-cover {
+  /* ゴーストの上に重ねる色付きマスク */
+  position:absolute; inset:0; border-radius:6px;
+}
+.fill-blank.hidden[data-lv="1"] { color:transparent; box-shadow:0 0 0 1.5px var(--lv1); }
+.fill-blank.hidden[data-lv="2"] { color:transparent; box-shadow:0 0 0 1.5px var(--lv2); }
+.fill-blank.hidden[data-lv="3"] { color:transparent; box-shadow:0 0 0 1.5px var(--lv3); }
+.fill-blank.hidden[data-lv="1"] .blank-cover { background:var(--lv1); }
+.fill-blank.hidden[data-lv="2"] .blank-cover { background:var(--lv2); }
+.fill-blank.hidden[data-lv="3"] .blank-cover { background:var(--lv3); }
+.fill-blank.hidden:hover .blank-cover { opacity:.75; }
+.fill-blank.hidden:hover { transform:scale(1.05); }
 .fill-blank.revealed[data-lv="1"] { background:rgba(78,205,196,.15); color:var(--lv1); box-shadow:0 0 0 1.5px var(--lv1); }
 .fill-blank.revealed[data-lv="2"] { background:rgba(245,158,11,.15); color:var(--lv2); box-shadow:0 0 0 1.5px var(--lv2); }
 .fill-blank.revealed[data-lv="3"] { background:rgba(244,63,94,.15);  color:var(--lv3); box-shadow:0 0 0 1.5px var(--lv3); }
-.fill-blank.all-revealed[data-lv="1"] { background:rgba(78,205,196,.12); color:var(--lv1); box-shadow:0 0 0 1.5px var(--lv1); }
-.fill-blank.all-revealed[data-lv="2"] { background:rgba(245,158,11,.12); color:var(--lv2); box-shadow:0 0 0 1.5px var(--lv2); }
-.fill-blank.all-revealed[data-lv="3"] { background:rgba(244,63,94,.12);  color:var(--lv3); box-shadow:0 0 0 1.5px var(--lv3); }
-.char-hint { font-size:.7rem; font-weight:400; letter-spacing:.04em; }
+.fill-blank.all-revealed[data-lv="1"] { background:rgba(78,205,196,.1); color:var(--lv1); box-shadow:0 0 0 1.5px var(--lv1); }
+.fill-blank.all-revealed[data-lv="2"] { background:rgba(245,158,11,.1); color:var(--lv2); box-shadow:0 0 0 1.5px var(--lv2); }
+.fill-blank.all-revealed[data-lv="3"] { background:rgba(244,63,94,.1);  color:var(--lv3); box-shadow:0 0 0 1.5px var(--lv3); }
+.char-hint { font-size:.72rem; font-weight:400; letter-spacing:.04em; }
 .fill-jp { font-size:.88rem; color:var(--muted); text-align:center; line-height:1.65; margin-bottom:6px; }
 .fill-note { font-size:.76rem; color:var(--muted); font-style:italic; text-align:center; }
 .tap-hint { text-align:center; font-size:.72rem; color:var(--muted); margin-bottom:12px; display:flex; align-items:center; justify-content:center; gap:5px; }
@@ -663,12 +695,12 @@ function renderFillCard() {
   const pct=Math.round(fillIdx/fillQueue.length*100);
   const info=LV_INFO[fillLevel];
 
+  // ゴーストテキストで開く前後のサイズを固定し、レイアウトがずれないようにする
   let sentenceHtml=parts.map((p,i)=>{
-    if(!p.isBlank) return `<span>${escHtml(p.text)}</span>`;
-    const inside=fillLevel===3
-      ?`<span class="char-hint">${p.charHint}文字</span>`
-      :`<span style="opacity:0">${escHtml(p.answer)}</span>`;
-    return `<span class="fill-blank hidden" data-lv="${fillLevel}" data-answer="${escHtml(p.answer)}" id="blank-${i}" onclick="tapBlank(${i})" title="タップして表示">${inside}</span>`;
+    if(!p.isBlank) return `<span class="fill-word">${escHtml(p.text)}</span>`;
+    // ghost: 実際の答え文字列を不可視で配置してボックスサイズを確保
+    // cover: その上に色を被せてマスク
+    return `<span class="fill-blank hidden" data-lv="${fillLevel}" data-answer="${escHtml(p.answer)}" id="blank-${i}" onclick="tapBlank(${i})" title="タップして表示"><span class="blank-ghost">${escHtml(p.answer)}</span><span class="blank-cover"></span></span>`;
   }).join('');
 
   el.innerHTML=`
@@ -704,8 +736,13 @@ function changeFillLevel(lv) { fillLevel=lv; renderFillCard(); }
 function tapBlank(i) {
   const wrap=document.getElementById(`blank-${i}`);
   if(!wrap||!wrap.classList.contains('hidden')) return;
+  // coverを消すだけ。ghostが可視になって答えが表示される。サイズは変わらない
+  const cover=wrap.querySelector('.blank-cover');
+  if(cover) cover.remove();
+  const ghost=wrap.querySelector('.blank-ghost');
+  if(ghost) ghost.style.visibility='visible';
   wrap.classList.remove('hidden'); wrap.classList.add('revealed');
-  wrap.innerHTML=escHtml(wrap.dataset.answer); wrap.onclick=null;
+  wrap.onclick=null;
   updateRevealCount();
 }
 function updateRevealCount() {
@@ -715,7 +752,11 @@ function updateRevealCount() {
   if(revealed===total){const res=document.getElementById('fill-result');if(res&&!res.textContent){res.textContent='✅ 全部確認しました！';res.className='fill-result ok';}}
 }
 function revealAll() {
-  document.querySelectorAll('.fill-blank.hidden').forEach(w=>{w.classList.remove('hidden');w.classList.add('all-revealed');w.innerHTML=escHtml(w.dataset.answer);w.onclick=null;});
+  document.querySelectorAll('.fill-blank.hidden').forEach(w=>{
+    const cover=w.querySelector('.blank-cover'); if(cover) cover.remove();
+    const ghost=w.querySelector('.blank-ghost'); if(ghost) ghost.style.visibility='visible';
+    w.classList.remove('hidden'); w.classList.add('all-revealed'); w.onclick=null;
+  });
   updateRevealCount();
   const res=document.getElementById('fill-result');if(res){res.textContent='💡 すべて表示しました';res.className='fill-result partial';}
 }
