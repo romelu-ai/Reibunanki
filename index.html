@@ -8,247 +8,248 @@
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@300;400;500;600&family=Fira+Code:wght@400&display=swap" rel="stylesheet">
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
 :root {
-  --navy:    #1a1f3a;
-  --navy2:   #2d3561;
-  --navy3:   #3d4882;
-  --aqua:    #4ecdc4;
-  --aqua2:   #38b2aa;
-  --cream:   #f0f4ff;
-  --muted:   #8892b0;
-  --white:   #ffffff;
-  --success: #63e6be;
-  --danger:  #ff6b6b;
-  --warn:    #ffd166;
-  --purple:  #c084fc;
-  --lv1:     #4ecdc4;
-  --lv2:     #f59e0b;
-  --lv3:     #f43f5e;
+  --navy:#1a1f3a; --navy2:#2d3561; --navy3:#3d4882;
+  --aqua:#4ecdc4; --aqua2:#38b2aa;
+  --cream:#f0f4ff; --muted:#8892b0; --white:#ffffff;
+  --success:#63e6be; --danger:#ff6b6b; --warn:#ffd166;
+  --purple:#c084fc; --gold:#f59e0b;
+  --lv1:#4ecdc4; --lv2:#f59e0b; --lv3:#f43f5e;
+  --weak:#ff6b6b;
 }
+body { background:var(--navy); color:var(--cream); font-family:'Inter',sans-serif; min-height:100vh; display:flex; flex-direction:column; }
 
-body { background: var(--navy); color: var(--cream); font-family: 'Inter', sans-serif; min-height: 100vh; display: flex; flex-direction: column; }
+/* Header */
+header { display:flex; align-items:center; justify-content:space-between; padding:13px 24px; border-bottom:1px solid rgba(78,205,196,.18); background:rgba(26,31,58,.92); backdrop-filter:blur(12px); position:sticky; top:0; z-index:100; gap:12px; }
+.logo { font-family:'Playfair Display',serif; font-size:1.25rem; color:var(--aqua); letter-spacing:.03em; white-space:nowrap; flex-shrink:0; }
+.logo span { color:var(--cream); }
+nav { display:flex; gap:5px; flex-wrap:wrap; }
+.nav-btn { padding:7px 13px; border-radius:8px; border:1.5px solid transparent; cursor:pointer; font-family:'Inter',sans-serif; font-size:.8rem; font-weight:500; transition:all .2s; white-space:nowrap; }
+.nav-btn.active  { background:var(--aqua); color:var(--navy); border-color:var(--aqua); }
+.nav-btn.active.fill { background:var(--purple); border-color:var(--purple); color:#fff; }
+.nav-btn.outline { background:transparent; color:var(--muted); border-color:var(--navy3); }
+.nav-btn.outline:hover { border-color:var(--aqua); color:var(--aqua); }
 
-/* ── Header ── */
-header {
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 13px 24px; border-bottom: 1px solid rgba(78,205,196,.18);
-  background: rgba(26,31,58,.92); backdrop-filter: blur(12px);
-  position: sticky; top: 0; z-index: 100; gap: 12px;
+/* Screens */
+.screen { display:none; flex:1; padding:28px 18px; max-width:860px; margin:0 auto; width:100%; }
+.screen.active { display:flex; flex-direction:column; }
+
+/* Progress */
+.progress-bar-wrap { height:4px; background:var(--navy2); border-radius:4px; margin-bottom:18px; }
+.progress-bar { height:4px; background:var(--aqua); border-radius:4px; transition:width .4s ease; }
+.counter { text-align:center; color:var(--muted); font-size:.78rem; margin-bottom:14px; letter-spacing:.06em; text-transform:uppercase; }
+
+/* ── SESSION SETUP PANEL ── */
+.setup-panel {
+  background:var(--navy2); border-radius:18px; padding:22px;
+  border:1px solid rgba(78,205,196,.14); margin-bottom:22px;
 }
-.logo { font-family: 'Playfair Display', serif; font-size: 1.25rem; color: var(--aqua); letter-spacing: .03em; white-space: nowrap; flex-shrink: 0; }
-.logo span { color: var(--cream); }
-nav { display: flex; gap: 5px; flex-wrap: wrap; }
-.nav-btn {
-  padding: 7px 13px; border-radius: 8px; border: 1.5px solid transparent;
-  cursor: pointer; font-family: 'Inter', sans-serif; font-size: .8rem; font-weight: 500; transition: all .2s; white-space: nowrap;
-}
-.nav-btn.active  { background: var(--aqua); color: var(--navy); border-color: var(--aqua); }
-.nav-btn.active.fill { background: var(--purple); border-color: var(--purple); color: #fff; }
-.nav-btn.outline { background: transparent; color: var(--muted); border-color: var(--navy3); }
-.nav-btn.outline:hover { border-color: var(--aqua); color: var(--aqua); }
+.setup-panel-title { font-size:.7rem; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:var(--aqua); margin-bottom:14px; }
+.setup-row { display:flex; gap:8px; flex-wrap:wrap; align-items:center; margin-bottom:10px; }
+.setup-row:last-child { margin-bottom:0; }
+.setup-label { font-size:.74rem; color:var(--muted); min-width:60px; }
+.chip-group { display:flex; gap:6px; flex-wrap:wrap; }
+.chip { padding:5px 13px; border-radius:20px; border:1.5px solid var(--navy3); background:transparent; color:var(--muted); font-family:'Inter',sans-serif; font-size:.76rem; cursor:pointer; transition:all .2s; white-space:nowrap; }
+.chip:hover { border-color:var(--aqua); color:var(--aqua); }
+.chip.sel-aqua   { border-color:var(--aqua);   color:var(--aqua);   background:rgba(78,205,196,.12); }
+.chip.sel-gold   { border-color:var(--gold);   color:var(--gold);   background:rgba(245,158,11,.12); }
+.chip.sel-purple { border-color:var(--purple); color:var(--purple); background:rgba(192,132,252,.12); }
+.chip.sel-weak   { border-color:var(--weak);   color:var(--weak);   background:rgba(255,107,107,.12); }
+.chip.sel-warn   { border-color:var(--warn);   color:var(--warn);   background:rgba(255,209,102,.12); }
+.start-btn { padding:10px 28px; border-radius:12px; border:none; background:var(--aqua); color:var(--navy); font-family:'Inter',sans-serif; font-size:.9rem; font-weight:700; cursor:pointer; transition:background .2s; margin-top:4px; }
+.start-btn:hover { background:var(--aqua2); }
+.start-btn.fill-mode { background:var(--purple); color:#fff; }
+.start-btn.fill-mode:hover { background:#a855f7; }
 
-/* ── Screens ── */
-.screen { display: none; flex: 1; padding: 32px 18px; max-width: 860px; margin: 0 auto; width: 100%; }
-.screen.active { display: flex; flex-direction: column; }
+/* Flip card */
+.card-scene { perspective:1200px; width:100%; max-width:640px; margin:0 auto 22px; }
+.card { width:100%; aspect-ratio:16/9; position:relative; transform-style:preserve-3d; transition:transform .55s cubic-bezier(.4,0,.2,1); cursor:pointer; }
+.card.flipped { transform:rotateY(180deg); }
+.card-face { position:absolute; inset:0; backface-visibility:hidden; border-radius:20px; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:26px; text-align:center; }
+.card-front { background:linear-gradient(135deg,var(--navy2) 0%,#1e2550 100%); border:1.5px solid rgba(78,205,196,.25); box-shadow:0 20px 60px rgba(0,0,0,.45); }
+.card-back  { background:linear-gradient(135deg,#0d2a28 0%,#0d2038 100%); border:1.5px solid rgba(78,205,196,.4); box-shadow:0 20px 60px rgba(0,0,0,.45); transform:rotateY(180deg); }
+/* Weak card tint */
+.card-front.is-weak { border-color:rgba(255,107,107,.4); background:linear-gradient(135deg,#2e1e22 0%,#1e1530 100%); }
+.card-label { font-size:.66rem; letter-spacing:.14em; text-transform:uppercase; color:var(--aqua); margin-bottom:10px; font-weight:600; }
+.card-english { font-family:'Fira Code',monospace; font-size:1.1rem; line-height:1.8; color:var(--white); }
+.card-japanese { font-size:1rem; line-height:1.8; color:var(--cream); }
+.card-note { margin-top:12px; font-size:.76rem; color:var(--muted); font-style:italic; }
+.flip-hint { font-size:.7rem; color:var(--muted); margin-top:14px; display:flex; align-items:center; gap:5px; }
+.flip-hint::before { content:'↻'; color:var(--aqua); }
+.list-tag { display:inline-block; font-size:.64rem; background:rgba(78,205,196,.12); color:var(--aqua); padding:2px 8px; border-radius:4px; margin-top:6px; }
+.builtin-tag { background:rgba(245,158,11,.12); color:var(--gold); }
+.weak-badge { display:inline-flex; align-items:center; gap:4px; font-size:.62rem; color:var(--weak); background:rgba(255,107,107,.1); padding:2px 8px; border-radius:10px; margin-bottom:6px; font-weight:700; }
+.builtin-badge { display:inline-flex; align-items:center; gap:4px; font-size:.62rem; color:var(--gold); background:rgba(245,158,11,.1); padding:2px 8px; border-radius:10px; margin-bottom:6px; font-weight:600; }
 
-/* ── Progress ── */
-.progress-bar-wrap { height: 4px; background: var(--navy2); border-radius: 4px; margin-bottom: 22px; }
-.progress-bar { height: 4px; background: var(--aqua); border-radius: 4px; transition: width .4s ease; }
-.counter { text-align: center; color: var(--muted); font-size: .78rem; margin-bottom: 16px; letter-spacing: .06em; text-transform: uppercase; }
-
-/* ── Flip card ── */
-.card-scene { perspective: 1200px; width: 100%; max-width: 640px; margin: 0 auto 26px; }
-.card {
-  width: 100%; aspect-ratio: 16/9; position: relative;
-  transform-style: preserve-3d; transition: transform .55s cubic-bezier(.4,0,.2,1); cursor: pointer;
-}
-.card.flipped { transform: rotateY(180deg); }
-.card-face {
-  position: absolute; inset: 0; backface-visibility: hidden; border-radius: 20px;
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
-  padding: 26px; text-align: center;
-}
-.card-front { background: linear-gradient(135deg, var(--navy2) 0%, #1e2550 100%); border: 1.5px solid rgba(78,205,196,.25); box-shadow: 0 20px 60px rgba(0,0,0,.45); }
-.card-back  { background: linear-gradient(135deg, #0d2a28 0%, #0d2038 100%); border: 1.5px solid rgba(78,205,196,.4); box-shadow: 0 20px 60px rgba(0,0,0,.45); transform: rotateY(180deg); }
-.card-label { font-size: .66rem; letter-spacing: .14em; text-transform: uppercase; color: var(--aqua); margin-bottom: 10px; font-weight: 600; }
-.card-english { font-family: 'Fira Code', monospace; font-size: 1.1rem; line-height: 1.8; color: var(--white); }
-.card-japanese { font-size: 1rem; line-height: 1.8; color: var(--cream); }
-.card-note { margin-top: 12px; font-size: .76rem; color: var(--muted); font-style: italic; }
-.flip-hint { font-size: .7rem; color: var(--muted); margin-top: 14px; display: flex; align-items: center; gap: 5px; }
-.flip-hint::before { content: '↻'; color: var(--aqua); }
-.list-tag { display: inline-block; font-size: .64rem; background: rgba(78,205,196,.12); color: var(--aqua); padding: 2px 8px; border-radius: 4px; margin-top: 8px; }
+/* Weak count ring on card */
+.weak-count-ring { position:absolute; top:12px; right:14px; width:32px; height:32px; border-radius:50%; background:rgba(255,107,107,.18); border:1.5px solid var(--weak); display:flex; align-items:center; justify-content:center; font-size:.72rem; font-weight:700; color:var(--weak); }
 
 /* Study actions */
-.study-actions { display: flex; justify-content: center; gap: 14px; margin-top: 8px; }
-.action-btn { width: 50px; height: 50px; border-radius: 50%; border: none; cursor: pointer; font-size: 1.15rem; display: flex; align-items: center; justify-content: center; transition: transform .15s; }
-.action-btn:hover { transform: translateY(-2px); }
-.btn-wrong { background: rgba(255,107,107,.18); color: var(--danger); box-shadow: 0 0 0 1.5px var(--danger); }
-.btn-hard  { background: rgba(255,209,102,.14); color: var(--warn);   box-shadow: 0 0 0 1.5px var(--warn); }
-.btn-good  { background: rgba(99,230,190,.16);  color: var(--success); box-shadow: 0 0 0 1.5px var(--success); }
-.btn-wrong:hover { background: rgba(255,107,107,.3); }
-.btn-hard:hover  { background: rgba(255,209,102,.28); }
-.btn-good:hover  { background: rgba(99,230,190,.3); }
-.action-labels { display: flex; justify-content: center; gap: 14px; margin-top: 6px; }
-.action-label { width: 50px; text-align: center; font-size: .64rem; color: var(--muted); }
+.study-actions { display:flex; justify-content:center; gap:14px; margin-top:8px; }
+.action-btn { width:50px; height:50px; border-radius:50%; border:none; cursor:pointer; font-size:1.15rem; display:flex; align-items:center; justify-content:center; transition:transform .15s; }
+.action-btn:hover { transform:translateY(-2px); }
+.btn-wrong { background:rgba(255,107,107,.18); color:var(--danger); box-shadow:0 0 0 1.5px var(--danger); }
+.btn-hard  { background:rgba(255,209,102,.14); color:var(--warn);   box-shadow:0 0 0 1.5px var(--warn); }
+.btn-good  { background:rgba(99,230,190,.16);  color:var(--success);box-shadow:0 0 0 1.5px var(--success); }
+.btn-wrong:hover { background:rgba(255,107,107,.3); }
+.btn-hard:hover  { background:rgba(255,209,102,.28); }
+.btn-good:hover  { background:rgba(99,230,190,.3); }
+.action-labels { display:flex; justify-content:center; gap:14px; margin-top:6px; }
+.action-label { width:50px; text-align:center; font-size:.64rem; color:var(--muted); }
 
-/* ── LEVEL SELECTOR ── */
-.level-selector {
-  display: flex; gap: 10px; justify-content: center; margin-bottom: 24px; flex-wrap: wrap;
-}
-.lv-btn {
-  padding: 9px 20px; border-radius: 10px; border: 2px solid transparent;
-  cursor: pointer; font-family: 'Inter', sans-serif; font-size: .82rem; font-weight: 700;
-  transition: all .2s; display: flex; align-items: center; gap: 6px;
-}
-.lv-btn[data-lv="1"] { border-color: var(--lv1); color: var(--lv1); background: rgba(78,205,196,.08); }
-.lv-btn[data-lv="2"] { border-color: var(--lv2); color: var(--lv2); background: rgba(245,158,11,.08); }
-.lv-btn[data-lv="3"] { border-color: var(--lv3); color: var(--lv3); background: rgba(244,63,94,.08); }
-.lv-btn.selected[data-lv="1"] { background: var(--lv1); color: var(--navy); }
-.lv-btn.selected[data-lv="2"] { background: var(--lv2); color: var(--navy); }
-.lv-btn.selected[data-lv="3"] { background: var(--lv3); color: #fff; }
-.lv-dot { width: 8px; height: 8px; border-radius: 50%; background: currentColor; display: inline-block; }
+/* Level selector */
+.level-selector { display:flex; gap:10px; justify-content:center; margin-bottom:20px; flex-wrap:wrap; }
+.lv-btn { padding:9px 20px; border-radius:10px; border:2px solid transparent; cursor:pointer; font-family:'Inter',sans-serif; font-size:.82rem; font-weight:700; transition:all .2s; display:flex; align-items:center; gap:6px; }
+.lv-btn[data-lv="1"] { border-color:var(--lv1); color:var(--lv1); background:rgba(78,205,196,.08); }
+.lv-btn[data-lv="2"] { border-color:var(--lv2); color:var(--lv2); background:rgba(245,158,11,.08); }
+.lv-btn[data-lv="3"] { border-color:var(--lv3); color:var(--lv3); background:rgba(244,63,94,.08); }
+.lv-btn.selected[data-lv="1"] { background:var(--lv1); color:var(--navy); }
+.lv-btn.selected[data-lv="2"] { background:var(--lv2); color:var(--navy); }
+.lv-btn.selected[data-lv="3"] { background:var(--lv3); color:#fff; }
+.lv-dot { width:8px; height:8px; border-radius:50%; background:currentColor; display:inline-block; }
+.lv-badge { display:inline-flex; align-items:center; gap:5px; font-size:.66rem; font-weight:700; padding:3px 10px; border-radius:20px; text-transform:uppercase; letter-spacing:.08em; margin-bottom:10px; }
+.lv-badge[data-lv="1"] { background:rgba(78,205,196,.15);  color:var(--lv1); }
+.lv-badge[data-lv="2"] { background:rgba(245,158,11,.15);  color:var(--lv2); }
+.lv-badge[data-lv="3"] { background:rgba(244,63,94,.15);   color:var(--lv3); }
 
-/* Level indicator badge */
-.lv-badge {
-  display: inline-flex; align-items: center; gap: 5px;
-  font-size: .66rem; font-weight: 700; padding: 3px 10px; border-radius: 20px;
-  text-transform: uppercase; letter-spacing: .08em; margin-bottom: 12px;
-}
-.lv-badge[data-lv="1"] { background: rgba(78,205,196,.15);  color: var(--lv1); }
-.lv-badge[data-lv="2"] { background: rgba(245,158,11,.15); color: var(--lv2); }
-.lv-badge[data-lv="3"] { background: rgba(244,63,94,.15);  color: var(--lv3); }
-
-/* ── FILL-IN CARD ── */
-.fill-card {
-  background: linear-gradient(135deg, #1c1040 0%, #22103a 100%);
-  border-radius: 20px; padding: 28px 24px;
-  max-width: 680px; margin: 0 auto 20px;
-  box-shadow: 0 20px 60px rgba(0,0,0,.45);
-  transition: border-color .3s;
-}
-.fill-card[data-lv="1"] { border: 1.5px solid rgba(78,205,196,.4); }
-.fill-card[data-lv="2"] { border: 1.5px solid rgba(245,158,11,.4); }
-.fill-card[data-lv="3"] { border: 1.5px solid rgba(244,63,94,.4); }
-
-.fill-card-label { font-size: .66rem; letter-spacing: .14em; text-transform: uppercase; color: var(--purple); margin-bottom: 10px; font-weight: 600; }
-
-.fill-sentence {
-  font-family: 'Fira Code', monospace; font-size: 1.05rem; line-height: 2.6;
-  color: var(--white); text-align: center; margin-bottom: 18px;
-  word-break: break-word;
-}
-
-/* Tap-to-reveal blank */
-.fill-blank {
-  display: inline-flex; align-items: center; justify-content: center;
-  border-radius: 6px; padding: 2px 6px; margin: 0 1px;
-  font-weight: 700; position: relative; vertical-align: middle;
-  cursor: pointer; transition: all .22s cubic-bezier(.4,0,.2,1);
-  user-select: none; min-width: 36px;
-}
-/* Hidden state: coloured block */
-.fill-blank.hidden[data-lv="1"] { background: var(--lv1);  color: var(--lv1);  box-shadow: 0 0 0 1.5px var(--lv1); }
-.fill-blank.hidden[data-lv="2"] { background: var(--lv2);  color: var(--lv2);  box-shadow: 0 0 0 1.5px var(--lv2); }
-.fill-blank.hidden[data-lv="3"] { background: var(--lv3);  color: var(--lv3);  box-shadow: 0 0 0 1.5px var(--lv3); }
-.fill-blank.hidden:hover { opacity: .8; transform: scale(1.06); }
-
-/* Revealed state: show the word */
-.fill-blank.revealed[data-lv="1"] { background: rgba(78,205,196,.15);  color: var(--lv1);  box-shadow: 0 0 0 1.5px var(--lv1); }
-.fill-blank.revealed[data-lv="2"] { background: rgba(245,158,11,.15); color: var(--lv2);  box-shadow: 0 0 0 1.5px var(--lv2); }
-.fill-blank.revealed[data-lv="3"] { background: rgba(244,63,94,.15);  color: var(--lv3);  box-shadow: 0 0 0 1.5px var(--lv3); }
-
-/* Char-count hint shown inside hidden block */
-.char-hint { font-size: .7rem; font-weight: 400; letter-spacing: .04em; }
-
-/* All-revealed state after "全部表示" */
-.fill-blank.all-revealed[data-lv="1"] { background: rgba(78,205,196,.12); color: var(--lv1); box-shadow: 0 0 0 1.5px var(--lv1); }
-.fill-blank.all-revealed[data-lv="2"] { background: rgba(245,158,11,.12); color: var(--lv2); box-shadow: 0 0 0 1.5px var(--lv2); }
-.fill-blank.all-revealed[data-lv="3"] { background: rgba(244,63,94,.12);  color: var(--lv3); box-shadow: 0 0 0 1.5px var(--lv3); }
-
-.fill-jp { font-size: .88rem; color: var(--muted); text-align: center; line-height: 1.65; margin-bottom: 6px; }
-.fill-note { font-size: .76rem; color: var(--muted); font-style: italic; text-align: center; }
-
-.tap-hint { text-align: center; font-size: .72rem; color: var(--muted); margin-bottom: 14px; display: flex; align-items: center; justify-content: center; gap: 5px; }
-.tap-hint::before { content: '👆'; font-size: .85rem; }
-
-.fill-result { text-align: center; margin-top: 14px; font-size: .9rem; font-weight: 700; min-height: 22px; }
-.fill-result.ok  { color: var(--success); }
-.fill-result.partial { color: var(--warn); }
-
-.fill-actions { display: flex; justify-content: center; gap: 10px; margin-top: 16px; flex-wrap: wrap; }
-.fill-btn { padding: 9px 20px; border-radius: 10px; border: none; cursor: pointer; font-family: 'Inter', sans-serif; font-size: .85rem; font-weight: 600; transition: all .2s; }
-.fill-btn-all    { background: var(--purple); color: #fff; }
-.fill-btn-all:hover { background: #a855f7; }
-.fill-btn-next   { background: rgba(78,205,196,.15); color: var(--aqua); border: 1.5px solid var(--aqua); }
-.fill-btn-next:hover { background: rgba(78,205,196,.3); }
-
-/* score row */
-.score-row { display: flex; justify-content: center; gap: 24px; margin-top: 12px; font-size: .78rem; color: var(--muted); }
-.score-row b { color: var(--cream); }
+/* Fill card */
+.fill-card { background:linear-gradient(135deg,#1c1040 0%,#22103a 100%); border-radius:20px; padding:28px 24px; max-width:680px; margin:0 auto 20px; box-shadow:0 20px 60px rgba(0,0,0,.45); transition:border-color .3s; }
+.fill-card[data-lv="1"] { border:1.5px solid rgba(78,205,196,.4); }
+.fill-card[data-lv="2"] { border:1.5px solid rgba(245,158,11,.4); }
+.fill-card[data-lv="3"] { border:1.5px solid rgba(244,63,94,.4); }
+.fill-sentence { font-family:'Fira Code',monospace; font-size:1.05rem; line-height:2.6; color:var(--white); text-align:center; margin-bottom:16px; word-break:break-word; }
+.fill-blank { display:inline-flex; align-items:center; justify-content:center; border-radius:6px; padding:2px 6px; margin:0 1px; font-weight:700; position:relative; vertical-align:middle; cursor:pointer; transition:all .22s cubic-bezier(.4,0,.2,1); user-select:none; min-width:36px; }
+.fill-blank.hidden[data-lv="1"] { background:var(--lv1); color:var(--lv1); box-shadow:0 0 0 1.5px var(--lv1); }
+.fill-blank.hidden[data-lv="2"] { background:var(--lv2); color:var(--lv2); box-shadow:0 0 0 1.5px var(--lv2); }
+.fill-blank.hidden[data-lv="3"] { background:var(--lv3); color:var(--lv3); box-shadow:0 0 0 1.5px var(--lv3); }
+.fill-blank.hidden:hover { opacity:.8; transform:scale(1.06); }
+.fill-blank.revealed[data-lv="1"] { background:rgba(78,205,196,.15); color:var(--lv1); box-shadow:0 0 0 1.5px var(--lv1); }
+.fill-blank.revealed[data-lv="2"] { background:rgba(245,158,11,.15); color:var(--lv2); box-shadow:0 0 0 1.5px var(--lv2); }
+.fill-blank.revealed[data-lv="3"] { background:rgba(244,63,94,.15);  color:var(--lv3); box-shadow:0 0 0 1.5px var(--lv3); }
+.fill-blank.all-revealed[data-lv="1"] { background:rgba(78,205,196,.12); color:var(--lv1); box-shadow:0 0 0 1.5px var(--lv1); }
+.fill-blank.all-revealed[data-lv="2"] { background:rgba(245,158,11,.12); color:var(--lv2); box-shadow:0 0 0 1.5px var(--lv2); }
+.fill-blank.all-revealed[data-lv="3"] { background:rgba(244,63,94,.12);  color:var(--lv3); box-shadow:0 0 0 1.5px var(--lv3); }
+.char-hint { font-size:.7rem; font-weight:400; letter-spacing:.04em; }
+.fill-jp { font-size:.88rem; color:var(--muted); text-align:center; line-height:1.65; margin-bottom:6px; }
+.fill-note { font-size:.76rem; color:var(--muted); font-style:italic; text-align:center; }
+.tap-hint { text-align:center; font-size:.72rem; color:var(--muted); margin-bottom:12px; display:flex; align-items:center; justify-content:center; gap:5px; }
+.tap-hint::before { content:'👆'; font-size:.85rem; }
+.fill-result { text-align:center; margin-top:12px; font-size:.9rem; font-weight:700; min-height:22px; }
+.fill-result.ok { color:var(--success); }
+.fill-result.partial { color:var(--warn); }
+.fill-actions { display:flex; justify-content:center; gap:10px; margin-top:14px; flex-wrap:wrap; }
+.fill-btn { padding:9px 20px; border-radius:10px; border:none; cursor:pointer; font-family:'Inter',sans-serif; font-size:.85rem; font-weight:600; transition:all .2s; }
+.fill-btn-all  { background:var(--purple); color:#fff; }
+.fill-btn-all:hover { background:#a855f7; }
+.fill-btn-next { background:rgba(78,205,196,.15); color:var(--aqua); border:1.5px solid var(--aqua); }
+.fill-btn-next:hover { background:rgba(78,205,196,.3); }
+.score-row { display:flex; justify-content:center; gap:24px; margin-top:10px; font-size:.78rem; color:var(--muted); }
+.score-row b { color:var(--cream); }
 
 /* ── Manage ── */
-.section-title { font-family: 'Playfair Display', serif; font-size: 1.45rem; color: var(--cream); margin-bottom: 6px; }
-.section-sub { color: var(--muted); font-size: .84rem; margin-bottom: 26px; }
-.add-form { background: var(--navy2); border-radius: 16px; padding: 22px; margin-bottom: 30px; border: 1px solid rgba(78,205,196,.12); }
-.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 13px; margin-bottom: 13px; }
-.form-group { display: flex; flex-direction: column; gap: 5px; }
-.form-group.full { grid-column: 1 / -1; }
-label { font-size: .74rem; font-weight: 600; color: var(--aqua); letter-spacing: .06em; text-transform: uppercase; }
-input, textarea, select {
-  background: var(--navy); border: 1.5px solid var(--navy3); border-radius: 10px;
-  padding: 10px 12px; color: var(--cream); font-family: 'Inter', sans-serif; font-size: .91rem;
-  transition: border-color .2s; outline: none;
-}
-input:focus, textarea:focus, select:focus { border-color: var(--aqua); }
-textarea { resize: vertical; min-height: 66px; line-height: 1.6; }
-.hint-text { font-size: .7rem; color: var(--muted); margin-top: 3px; }
-.hint-text code { background: rgba(192,132,252,.15); color: var(--purple); padding: 1px 5px; border-radius: 3px; font-family: 'Fira Code', monospace; }
-.add-btn { background: var(--aqua); color: var(--navy); border: none; border-radius: 10px; padding: 10px 24px; font-weight: 700; font-size: .91rem; cursor: pointer; transition: background .2s; }
-.add-btn:hover { background: var(--aqua2); }
+.section-title { font-family:'Playfair Display',serif; font-size:1.45rem; color:var(--cream); margin-bottom:6px; }
+.section-sub { color:var(--muted); font-size:.84rem; margin-bottom:18px; }
+.manage-tabs { display:flex; gap:0; margin-bottom:22px; border-bottom:2px solid var(--navy3); }
+.manage-tab { padding:10px 18px; border:none; background:transparent; color:var(--muted); font-family:'Inter',sans-serif; font-size:.84rem; font-weight:600; cursor:pointer; border-bottom:3px solid transparent; margin-bottom:-2px; transition:all .2s; white-space:nowrap; }
+.manage-tab.active-user { color:var(--aqua); border-bottom-color:var(--aqua); }
+.manage-tab.active-builtin { color:var(--gold); border-bottom-color:var(--gold); }
+.manage-tab.active-weak { color:var(--weak); border-bottom-color:var(--weak); }
+.manage-tab:hover { color:var(--cream); }
+.add-form { background:var(--navy2); border-radius:16px; padding:22px; margin-bottom:26px; border:1px solid rgba(78,205,196,.12); }
+.form-row { display:grid; grid-template-columns:1fr 1fr; gap:13px; margin-bottom:13px; }
+.form-group { display:flex; flex-direction:column; gap:5px; }
+.form-group.full { grid-column:1/-1; }
+label { font-size:.74rem; font-weight:600; color:var(--aqua); letter-spacing:.06em; text-transform:uppercase; }
+input, textarea, select { background:var(--navy); border:1.5px solid var(--navy3); border-radius:10px; padding:10px 12px; color:var(--cream); font-family:'Inter',sans-serif; font-size:.91rem; transition:border-color .2s; outline:none; }
+input:focus, textarea:focus, select:focus { border-color:var(--aqua); }
+textarea { resize:vertical; min-height:66px; line-height:1.6; }
+.hint-text { font-size:.7rem; color:var(--muted); margin-top:3px; }
+.hint-text code { background:rgba(192,132,252,.15); color:var(--purple); padding:1px 5px; border-radius:3px; font-family:'Fira Code',monospace; }
+.add-btn { background:var(--aqua); color:var(--navy); border:none; border-radius:10px; padding:10px 24px; font-weight:700; font-size:.91rem; cursor:pointer; transition:background .2s; }
+.add-btn:hover { background:var(--aqua2); }
 
-.cards-list { display: flex; flex-direction: column; gap: 9px; }
-.list-item { background: var(--navy2); border-radius: 13px; padding: 14px 16px; display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; border: 1px solid rgba(78,205,196,.1); transition: border-color .2s; }
-.list-item:hover { border-color: rgba(78,205,196,.3); }
-.list-item-content { flex: 1; min-width: 0; }
-.list-en { font-family: 'Fira Code', monospace; font-size: .86rem; color: var(--white); margin-bottom: 3px; line-height: 1.55; }
-.list-en .manual-blank { color: var(--purple); font-weight: 700; }
-.list-jp { font-size: .82rem; color: var(--muted); line-height: 1.5; }
-.list-actions { display: flex; gap: 5px; flex-shrink: 0; }
-.icon-btn { background: none; border: none; cursor: pointer; font-size: .9rem; padding: 5px; border-radius: 6px; color: var(--muted); transition: color .2s, background .2s; }
-.icon-btn:hover { background: rgba(255,107,107,.15); color: var(--danger); }
+/* Group headers in card list */
+.group-header { display:flex; align-items:center; gap:10px; padding:6px 0 10px; margin-top:18px; }
+.group-header:first-child { margin-top:0; }
+.group-header-label { font-size:.72rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--aqua); white-space:nowrap; }
+.group-header-label.gold { color:var(--gold); }
+.group-header-label.weak-label { color:var(--weak); }
+.group-header-line { flex:1; height:1px; background:rgba(78,205,196,.2); }
+.group-header-line.gold { background:rgba(245,158,11,.2); }
+.group-header-line.weak-line { background:rgba(255,107,107,.2); }
+.group-count { font-size:.65rem; color:var(--muted); }
 
-.stats-row { display: flex; gap: 12px; margin-bottom: 26px; flex-wrap: wrap; }
-.stat-card { flex: 1; min-width: 72px; background: var(--navy2); border-radius: 11px; padding: 13px 14px; text-align: center; border: 1px solid rgba(78,205,196,.1); }
-.stat-num { font-family: 'Playfair Display', serif; font-size: 1.6rem; color: var(--aqua); }
-.stat-lbl { font-size: .68rem; color: var(--muted); text-transform: uppercase; letter-spacing: .07em; }
+/* Controls bar for builtin/user list */
+.list-controls { display:flex; gap:10px; margin-bottom:16px; flex-wrap:wrap; align-items:center; }
+.list-controls input[type=text] { flex:1; min-width:160px; }
+.filter-select { background:var(--navy); border:1.5px solid var(--navy3); border-radius:10px; padding:9px 12px; color:var(--cream); font-family:'Inter',sans-serif; font-size:.86rem; outline:none; cursor:pointer; }
+.filter-select:focus { border-color:var(--aqua); }
+.count-badge { font-size:.76rem; color:var(--muted); white-space:nowrap; }
+
+.cards-list { display:flex; flex-direction:column; gap:9px; }
+.list-item { background:var(--navy2); border-radius:13px; padding:14px 16px; display:flex; align-items:flex-start; justify-content:space-between; gap:12px; border:1px solid rgba(78,205,196,.1); transition:border-color .2s; }
+.list-item:hover { border-color:rgba(78,205,196,.3); }
+.list-item.builtin-item { border-color:rgba(245,158,11,.1); }
+.list-item.builtin-item:hover { border-color:rgba(245,158,11,.3); }
+.list-item.weak-item { border-color:rgba(255,107,107,.2); }
+.list-item.weak-item:hover { border-color:rgba(255,107,107,.45); }
+.list-item-content { flex:1; min-width:0; }
+.list-en { font-family:'Fira Code',monospace; font-size:.86rem; color:var(--white); margin-bottom:3px; line-height:1.55; }
+.list-en .manual-blank { color:var(--purple); font-weight:700; }
+.list-jp { font-size:.82rem; color:var(--muted); line-height:1.5; margin-bottom:4px; }
+.list-note { font-size:.74rem; color:#6b7db3; font-style:italic; margin-bottom:4px; }
+.list-meta { display:flex; gap:6px; align-items:center; flex-wrap:wrap; }
+.list-actions { display:flex; gap:5px; flex-shrink:0; }
+.icon-btn { background:none; border:none; cursor:pointer; font-size:.9rem; padding:5px; border-radius:6px; color:var(--muted); transition:color .2s,background .2s; }
+.icon-btn:hover { background:rgba(255,107,107,.15); color:var(--danger); }
+.icon-btn.copy-btn { color:var(--gold); }
+.icon-btn.copy-btn:hover { background:rgba(245,158,11,.15); color:var(--gold); }
+.weak-pill { display:inline-flex; align-items:center; gap:3px; font-size:.65rem; color:var(--weak); background:rgba(255,107,107,.1); padding:2px 7px; border-radius:10px; font-weight:700; }
+
+/* Stats */
+.stats-row { display:flex; gap:12px; margin-bottom:22px; flex-wrap:wrap; }
+.stat-card { flex:1; min-width:68px; background:var(--navy2); border-radius:11px; padding:13px 14px; text-align:center; border:1px solid rgba(78,205,196,.1); cursor:pointer; transition:border-color .2s; }
+.stat-card:hover { border-color:rgba(78,205,196,.35); }
+.stat-card.stat-weak { border-color:rgba(255,107,107,.2); cursor:pointer; }
+.stat-card.stat-weak:hover { border-color:rgba(255,107,107,.5); }
+.stat-num { font-family:'Playfair Display',serif; font-size:1.6rem; color:var(--aqua); }
+.stat-num.red { color:var(--weak); }
+.stat-lbl { font-size:.68rem; color:var(--muted); text-transform:uppercase; letter-spacing:.07em; }
 
 /* Complete */
-.complete-screen { text-align: center; padding: 44px 20px; }
-.complete-icon { font-size: 3.2rem; margin-bottom: 12px; }
-.complete-title { font-family: 'Playfair Display', serif; font-size: 1.75rem; color: var(--aqua); margin-bottom: 6px; }
-.complete-title.fill { color: var(--purple); }
-.complete-sub { color: var(--muted); margin-bottom: 8px; }
-.complete-score { font-size: 1.35rem; font-weight: 700; color: var(--cream); margin-bottom: 24px; }
-.restart-btn { background: var(--aqua); color: var(--navy); border: none; border-radius: 12px; padding: 12px 30px; font-weight: 700; font-size: .92rem; cursor: pointer; transition: background .2s; margin: 5px; }
-.restart-btn:hover { background: var(--aqua2); }
-.restart-btn.fill { background: var(--purple); color: #fff; }
-.restart-btn.fill:hover { background: #a855f7; }
+.complete-screen { text-align:center; padding:44px 20px; }
+.complete-icon { font-size:3.2rem; margin-bottom:12px; }
+.complete-title { font-family:'Playfair Display',serif; font-size:1.75rem; color:var(--aqua); margin-bottom:6px; }
+.complete-title.fill { color:var(--purple); }
+.complete-sub { color:var(--muted); margin-bottom:8px; }
+.restart-btn { background:var(--aqua); color:var(--navy); border:none; border-radius:12px; padding:12px 28px; font-weight:700; font-size:.92rem; cursor:pointer; transition:background .2s; margin:5px; }
+.restart-btn:hover { background:var(--aqua2); }
+.restart-btn.fill { background:var(--purple); color:#fff; }
+.restart-btn.fill:hover { background:#a855f7; }
+.restart-btn.weak { background:rgba(255,107,107,.2); color:var(--weak); border:1.5px solid var(--weak); }
+.restart-btn.weak:hover { background:rgba(255,107,107,.35); }
 
 /* Empty */
-.empty-state { text-align: center; padding: 48px 20px; color: var(--muted); }
-.empty-state .icon { font-size: 2.8rem; margin-bottom: 12px; }
-.empty-state p { font-size: .92rem; }
+.empty-state { text-align:center; padding:44px 20px; color:var(--muted); }
+.empty-state .icon { font-size:2.8rem; margin-bottom:12px; }
+.empty-state p { font-size:.92rem; line-height:1.7; }
 
-@media (max-width: 600px) {
-  header { padding: 11px 12px; }
-  .logo { font-size: 1.05rem; }
-  .nav-btn { padding: 6px 9px; font-size: .74rem; }
-  .form-row { grid-template-columns: 1fr; }
-  .card-english, .fill-sentence { font-size: .92rem; }
-  .lv-btn { padding: 7px 14px; font-size: .76rem; }
+/* Toast */
+.toast { position:fixed; bottom:24px; left:50%; transform:translateX(-50%) translateY(80px); background:var(--navy2); color:var(--cream); padding:12px 22px; border-radius:12px; font-size:.88rem; font-weight:500; box-shadow:0 8px 32px rgba(0,0,0,.4); border:1px solid rgba(78,205,196,.2); transition:transform .3s ease; z-index:9999; white-space:nowrap; }
+.toast.show { transform:translateX(-50%) translateY(0); }
+.toast.gold { border-color:rgba(245,158,11,.4); }
+.toast.red  { border-color:rgba(255,107,107,.5); }
+
+@media (max-width:600px) {
+  header { padding:11px 12px; }
+  .logo  { font-size:1.05rem; }
+  .nav-btn { padding:6px 9px; font-size:.74rem; }
+  .form-row { grid-template-columns:1fr; }
+  .card-english, .fill-sentence { font-size:.92rem; }
+  .lv-btn { padding:7px 14px; font-size:.76rem; }
+  .manage-tab { padding:8px 12px; font-size:.78rem; }
 }
-@media (prefers-reduced-motion: reduce) { .card { transition: none; } }
+@media (prefers-reduced-motion:reduce) { .card { transition:none; } }
 </style>
 </head>
 <body>
@@ -262,226 +263,260 @@ textarea { resize: vertical; min-height: 66px; line-height: 1.6; }
   </nav>
 </header>
 
-<!-- STUDY -->
-<main class="screen active" id="screen-study">
-  <div id="study-content"></div>
-</main>
-
-<!-- FILL-IN -->
-<main class="screen" id="screen-fill">
-  <div id="fill-content"></div>
-</main>
-
-<!-- MANAGE -->
-<main class="screen" id="screen-manage">
-  <div class="section-title">例文を追加・管理</div>
-  <div class="section-sub">例文を入力して暗記リストに追加しましょう</div>
-  <div class="add-form">
-    <div class="form-row">
-      <div class="form-group full">
-        <label>英語の例文</label>
-        <textarea id="inp-en" placeholder="例: She has been studying English for three years."></textarea>
-        <div class="hint-text">重要箇所を手動指定: <code>[単語]</code> で囲む。例: <code>She has [been studying] English for [three years].</code>（Lv.1の穴として使用）</div>
-      </div>
-      <div class="form-group full">
-        <label>日本語訳</label>
-        <textarea id="inp-jp" placeholder="例: 彼女は3年間英語を勉強し続けています。"></textarea>
-      </div>
-      <div class="form-group">
-        <label>メモ（任意）</label>
-        <input id="inp-note" type="text" placeholder="文法ポイントや使い方など">
-      </div>
-      <div class="form-group">
-        <label>カテゴリ（任意）</label>
-        <input id="inp-tag" type="text" placeholder="例: 現在完了形、ビジネス">
-      </div>
-    </div>
-    <button class="add-btn" onclick="addCard()">＋ 追加する</button>
-  </div>
-  <div class="stats-row" id="stats-row"></div>
-  <div class="cards-list" id="cards-list"></div>
-</main>
+<main class="screen active" id="screen-study"><div id="study-content"></div></main>
+<main class="screen"        id="screen-fill"><div id="fill-content"></div></main>
+<main class="screen"        id="screen-manage"><div id="manage-content"></div></main>
+<div class="toast" id="toast"></div>
 
 <script>
-// ═══════════════════
-//  Data
-// ═══════════════════
-const STORAGE_KEY = 'en_master_v3';
-let cards = JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null') || [
-  { id:1, en:"She has [been studying] English for [three years].", jp:"彼女は3年間英語を勉強し続けています。", note:"現在完了進行形", tag:"現在完了形", score:0 },
-  { id:2, en:"If I [had known] the answer, I [would have told] you.", jp:"答えを知っていたら、あなたに教えていたのに。", note:"仮定法過去完了", tag:"仮定法", score:0 },
-  { id:3, en:"The meeting [has been postponed] until next Monday.", jp:"会議は来週月曜日まで延期されました。", note:"受動態 + 現在完了", tag:"ビジネス", score:0 },
-];
-function save() { localStorage.setItem(STORAGE_KEY, JSON.stringify(cards)); }
+// ═══════════════════════════════════════════
+//  STORAGE KEYS
+// ═══════════════════════════════════════════
+const BUILTIN_KEY = 'en_master_builtin_v1';
+const USER_KEY    = 'en_master_v4';
 
-// ═══════════════════
-//  Screen switch
-// ═══════════════════
+// ═══════════════════════════════════════════
+//  BUILTIN SENTENCES（旧帝大レベル・別ストレージ）
+// ═══════════════════════════════════════════
+const BUILTIN_DEFAULT = [
+  { id:'b1',  en:"[Had it not been] for your advice, I [would never have succeeded].", jp:"あなたのアドバイスがなければ、私は決して成功しなかったでしょう。", note:"仮定法過去完了の倒置形 (If it had not been → Had it not been)", tag:"仮定法", score:0, weak:0 },
+  { id:'b2',  en:"I [wish I had studied] harder when I was young.", jp:"若いころにもっと勉強しておけばよかったと思う。", note:"wish + 仮定法過去完了（過去への後悔）", tag:"仮定法", score:0, weak:0 },
+  { id:'b3',  en:"[Were it not for] the Internet, modern life [would be inconceivable].", jp:"インターネットがなければ、現代の生活は考えられないだろう。", note:"Were it not for ＝ If it were not for（現在の事実に反する仮定）", tag:"仮定法", score:0, weak:0 },
+  { id:'b4',  en:"It is [high time] you [started taking] your studies seriously.", jp:"そろそろ本気で勉強に取り組む時期だ。", note:"It is high time + 仮定法過去（もう〜すべき時だ）", tag:"仮定法", score:0, weak:0 },
+  { id:'b5',  en:"[Not until] she failed the exam [did she realize] the importance of revision.", jp:"試験に落ちて初めて、彼女は復習の大切さに気づいた。", note:"否定語句の倒置: Not until A do B = AしてはじめてBする", tag:"倒置・強調", score:0, weak:0 },
+  { id:'b6',  en:"[Little did] the scientists [suspect] that the discovery [would change] the world.", jp:"その発見が世界を変えることになるとは、科学者たちはほとんど思っていなかった。", note:"Little + 倒置（否定的意味の副詞句で文が始まるときの語順）", tag:"倒置・強調", score:0, weak:0 },
+  { id:'b7',  en:"It was [only through persistent effort] that he [managed to master] the language.", jp:"粘り強い努力によってのみ、彼はその言語を習得することができた。", note:"強調構文 It is ~ that … で副詞句を強調", tag:"倒置・強調", score:0, weak:0 },
+  { id:'b8',  en:"The reason [why so many students struggle] with writing is [that they lack] sufficient vocabulary.", jp:"多くの生徒が作文に苦労する理由は、十分な語彙が不足しているからだ。", note:"The reason why … is that … の構文", tag:"関係詞", score:0, weak:0 },
+  { id:'b9',  en:"[No matter how] difficult the problem [may seem], there is always a solution.", jp:"問題がどれほど難しく見えても、必ず解決策はある。", note:"no matter how + 形容詞 + S + V（譲歩の副詞節）", tag:"接続詞・譲歩", score:0, weak:0 },
+  { id:'b10', en:"[What is more], the new policy [is expected to reduce] carbon emissions [significantly].", jp:"さらに、その新しい政策は炭素排出量を大幅に削減することが期待されている。", note:"What is more = furthermore（接続副詞的表現）", tag:"接続詞・譲歩", score:0, weak:0 },
+  { id:'b11', en:"The [more] you practice, the [more fluent] you become.", jp:"練習すればするほど、より流暢になる。", note:"The + 比較級 ~, the + 比較級 … の構文", tag:"比較", score:0, weak:0 },
+  { id:'b12', en:"He is [no less] a genius [than] Einstein [was].", jp:"彼はアインシュタインに劣らない天才だ。", note:"no less … than = …と同様に（肯定強調の比較）", tag:"比較", score:0, weak:0 },
+  { id:'b13', en:"This laptop is [far superior to] the previous model [in terms of] processing speed.", jp:"このノートパソコンは処理速度の点で前モデルよりはるかに優れている。", note:"be superior to（be better thanより書き言葉的）＋ in terms of", tag:"比較", score:0, weak:0 },
+  { id:'b14', en:"[Having been] raised in a bilingual household, she [found it easy] to learn new languages.", jp:"バイリンガルの家庭で育ったので、彼女は新しい言語を習得するのが容易だった。", note:"完了形の受動分詞構文（Having been + p.p.）", tag:"分詞構文", score:0, weak:0 },
+  { id:'b15', en:"[Strictly speaking], the experiment [cannot be considered] a complete success.", jp:"厳密に言えば、その実験は完全な成功とは言えない。", note:"独立分詞構文（慣用的表現）strictly speaking / generally speaking", tag:"分詞構文", score:0, weak:0 },
+  { id:'b16', en:"[It goes without saying] that health [is more important] than wealth.", jp:"健康が富より重要であることは言うまでもない。", note:"It goes without saying that ~ = 〜は言うまでもない（慣用表現）", tag:"名詞節・構文", score:0, weak:0 },
+  { id:'b17', en:"He [is said to have been] one of the greatest novelists of the twentieth century.", jp:"彼は20世紀最大の小説家の一人であったと言われている。", note:"S + is said to have been + C（過去の伝聞：完了不定詞）", tag:"名詞節・構文", score:0, weak:0 },
+  { id:'b18', en:"[So important is] the role of sleep [that] neglecting it [can impair] cognitive function.", jp:"睡眠の役割はとても重要であり、それを怠ると認知機能が損なわれることがある。", note:"So + 形容詞 + be + S の倒置（強調構文）", tag:"倒置・強調", score:0, weak:0 },
+  { id:'b19', en:"The new bridge [is expected to be completed] by the end of next year.", jp:"その新しい橋は来年末までに完成する見込みだ。", note:"be expected to be + p.p.（未来の受動態＋期待）", tag:"受動態", score:0, weak:0 },
+  { id:'b20', en:"Students [are encouraged to make] the most of every learning opportunity [available to them].", jp:"生徒たちは、利用できるすべての学習機会を最大限に活かすよう促されている。", note:"be encouraged to do = 〜するよう奨励される、make the most of = 最大限活かす", tag:"受動態", score:0, weak:0 },
+  { id:'b21', en:"[It is not too much to say] that the ability to communicate in English [has become] an essential skill.", jp:"英語でコミュニケーションをとる能力が不可欠なスキルになったと言っても過言ではない。", note:"It is not too much to say that ~ = 〜と言っても過言ではない", tag:"英作文頻出", score:0, weak:0 },
+  { id:'b22', en:"[Despite] the obvious advantages of urban living, many people [prefer to] settle in rural areas.", jp:"都市生活の明らかな利点にもかかわらず、多くの人々は地方に定住することを好む。", note:"Despite + 名詞句（= Although + 節よりも簡潔）", tag:"英作文頻出", score:0, weak:0 },
+  { id:'b23', en:"The number of people [who work remotely] [has increased] dramatically [in recent years].", jp:"近年、リモートワークをする人の数が劇的に増加している。", note:"The number of + 複数名詞 + has (単数扱い)に注意", tag:"英作文頻出", score:0, weak:0 },
+  { id:'b24', en:"[As a result of] rapid technological progress, many traditional jobs [are being replaced] by automation.", jp:"急速な技術の進歩の結果、多くの伝統的な仕事が自動化に置き換えられつつある。", note:"as a result of + 名詞、replace by（受動）", tag:"英作文頻出", score:0, weak:0 },
+  { id:'b25', en:"[There is no denying] that environmental problems [require] immediate and collective action.", jp:"環境問題が即座かつ集団的な行動を必要とすることは否定できない。", note:"There is no ~ing = 〜することはできない（否定的慣用表現）", tag:"英作文頻出", score:0, weak:0 },
+  { id:'b26', en:"[The fact that] many students [find it difficult] to express their opinions in writing [suggests] a need for more writing practice.", jp:"多くの生徒が意見を文章で表現するのが難しいと感じるという事実は、作文練習がもっと必要であることを示唆している。", note:"The fact that ~ (同格節)＋ suggests（長い主語＋単数動詞）", tag:"東大・京大頻出", score:0, weak:0 },
+  { id:'b27', en:"[Not only did] the new law [fail to reduce] crime, but it also [led to] widespread public discontent.", jp:"新しい法律は犯罪を減らすことに失敗しただけでなく、広範な国民の不満を招いた。", note:"Not only did S V, but also … の倒置構文", tag:"東大・京大頻出", score:0, weak:0 },
+  { id:'b28', en:"[Whatever] the outcome [may be], we [must accept] the results with grace.", jp:"結果がどうであれ、私たちは潔くその結果を受け入れなければならない。", note:"whatever = no matter what（複合関係代名詞、譲歩節）", tag:"東大・京大頻出", score:0, weak:0 },
+  { id:'b29', en:"He [could not have achieved] such remarkable results [without] the support of his colleagues.", jp:"同僚たちの支援がなければ、彼はそれほど素晴らしい成果を達成できなかっただろう。", note:"could not have + p.p.（仮定法過去完了の帰結節）without = if it had not been for", tag:"仮定法", score:0, weak:0 },
+  { id:'b30', en:"The [tendency] for young people [to rely on] social media [for information] [raises] serious concerns [about] media literacy.", jp:"若者が情報収集にソーシャルメディアに依存する傾向は、メディアリテラシーについて深刻な懸念を引き起こす。", note:"tendency for A to do（Aが〜する傾向）、raise concerns about（懸念を引き起こす）", tag:"東大・京大頻出", score:0, weak:0 },
+];
+
+// ═══════════════════════════════════════════
+//  DATA
+// ═══════════════════════════════════════════
+function migrateWeak(arr) {
+  // 旧データに weak フィールドがなければ 0 で補完
+  return arr.map(c => ({ weak: 0, ...c }));
+}
+
+let cards = migrateWeak(JSON.parse(localStorage.getItem(USER_KEY) || 'null') || [
+  { id:1, en:"She has [been studying] English for [three years].", jp:"彼女は3年間英語を勉強し続けています。", note:"現在完了進行形", tag:"現在完了形", score:0, weak:0 },
+  { id:2, en:"If I [had known] the answer, I [would have told] you.", jp:"答えを知っていたら、あなたに教えていたのに。", note:"仮定法過去完了", tag:"仮定法", score:0, weak:0 },
+  { id:3, en:"The meeting [has been postponed] until next Monday.", jp:"会議は来週月曜日まで延期されました。", note:"受動態 + 現在完了", tag:"ビジネス", score:0, weak:0 },
+]);
+
+let builtinCards = migrateWeak(
+  JSON.parse(localStorage.getItem(BUILTIN_KEY) || 'null') || BUILTIN_DEFAULT.map(c=>({...c}))
+);
+
+function saveUser()    { localStorage.setItem(USER_KEY,    JSON.stringify(cards)); }
+function saveBuiltin() { localStorage.setItem(BUILTIN_KEY, JSON.stringify(builtinCards)); }
+
+function isWeak(c) { return (c.weak||0) >= 2; }
+function allWeak() { return [...cards, ...builtinCards].filter(isWeak); }
+
+// ═══════════════════════════════════════════
+//  TOAST
+// ═══════════════════════════════════════════
+function showToast(msg, type='') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show' + (type ? ' '+type : '');
+  setTimeout(() => t.className = 'toast'+(type?' '+type:''), 2400);
+}
+
+// ═══════════════════════════════════════════
+//  SCREEN SWITCH
+// ═══════════════════════════════════════════
 function showScreen(name) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.querySelectorAll('.nav-btn').forEach(b => { b.classList.add('outline'); b.classList.remove('active','fill'); });
-  document.getElementById('screen-' + name).classList.add('active');
-  const nb = document.getElementById('nav-' + name);
+  document.getElementById('screen-'+name).classList.add('active');
+  const nb = document.getElementById('nav-'+name);
   nb.classList.remove('outline'); nb.classList.add('active');
-  if (name === 'fill') nb.classList.add('fill');
-  if (name === 'study')  initStudy();
-  if (name === 'fill')   initFill();
-  if (name === 'manage') renderManage();
+  if (name==='fill') nb.classList.add('fill');
+  if (name==='study')  renderStudySetup();
+  if (name==='fill')   renderFillSetup();
+  if (name==='manage') renderManage();
 }
 
-// ═══════════════════
-//  Blank parsing
-// ═══════════════════
+// ═══════════════════════════════════════════
+//  BLANK PARSING
+// ═══════════════════════════════════════════
 function hasManual(en) { return /\[/.test(en); }
-function cleanEn(en)   { return en.replace(/\[([^\]]+)\]/g, '$1'); }
-
-// Tokenize: [{word, isPunct}]
+function cleanEn(en)   { return en.replace(/\[([^\]]+)\]/g,'$1'); }
 function tokenize(en) {
   const clean = cleanEn(en);
   return [...clean.matchAll(/([a-zA-Z']+|[^a-zA-Z']+)/g)].map(m => ({
-    word: m[0],
-    isPunct: !/[a-zA-Z']/.test(m[0])
+    word:m[0], isPunct:!/[a-zA-Z']/.test(m[0])
   }));
 }
+const FW = new Set(['a','an','the','i','you','he','she','it','we','they','me','him','her','us','them','my','your','his','its','our','their','this','that','these','those','is','are','was','were','am','be','been','being','have','has','had','do','does','did','will','would','could','should','may','might','must','shall','to','of','in','on','at','by','for','with','as','from','up','about','into','through','during','and','but','or','nor','so','yet','both','either','neither','not','if','when','while','although','because','since','until','unless','after','before','though','very','just','also','then','than','there','here','now','still','even','back','well','what','which','who','whom','whose','how','where','why']);
+function isContent(w) { return w.length>2 && !FW.has(w.toLowerCase()); }
 
-const FUNCTION_WORDS = new Set([
-  'a','an','the','i','you','he','she','it','we','they','me','him','her','us','them',
-  'my','your','his','its','our','their','this','that','these','those',
-  'is','are','was','were','am','be','been','being',
-  'have','has','had','do','does','did','will','would','could','should','may','might','must','shall',
-  'to','of','in','on','at','by','for','with','as','from','up','about','into','through','during',
-  'and','but','or','nor','so','yet','both','either','neither','not',
-  'if','when','while','although','because','since','until','unless','after','before','though',
-  'very','just','also','then','than','there','here','now','still','even','back','well',
-  'what','which','who','whom','whose','how','where','why'
-]);
-
-function isContent(word) {
-  return word.length > 2 && !FUNCTION_WORDS.has(word.toLowerCase());
-}
-
-/**
- * Build parts for a given level.
- * Returns [{text, isBlank, answer, charHint}]
- *
- * Lv1: manual [brackets] → blank; else 1 important phrase auto
- * Lv2: all content words (verbs/nouns/adj) → blank
- * Lv3: every word → blank, with char-count hint
- */
 function buildParts(card, level) {
   const en = card.en;
-
-  // ── Level 1 ──
-  if (level === 1) {
+  if (level===1) {
     if (hasManual(en)) {
-      const parts = [];
-      const re = /\[([^\]]+)\]/g;
-      let last = 0, m;
-      while ((m = re.exec(en)) !== null) {
-        if (m.index > last) parts.push({ text: en.slice(last, m.index), isBlank: false });
-        parts.push({ text: m[1], isBlank: true, answer: m[1] });
-        last = re.lastIndex;
+      const parts=[]; const re=/\[([^\]]+)\]/g; let last=0, m;
+      while((m=re.exec(en))!==null) {
+        if(m.index>last) parts.push({text:en.slice(last,m.index),isBlank:false});
+        parts.push({text:m[1],isBlank:true,answer:m[1]});
+        last=re.lastIndex;
       }
-      if (last < en.length) parts.push({ text: en.slice(last), isBlank: false });
+      if(last<en.length) parts.push({text:en.slice(last),isBlank:false});
       return parts;
     }
-    // auto: longest content word or verb group
-    const clean = cleanEn(en);
-    const patterns = [
-      /\b(?:have|has|had)\s+been\s+\w+ing\b/i,
-      /\b(?:would|could|should|might)\s+have\s+\w+ed\b/i,
-      /\b(?:has|have|had)\s+been\s+\w+ed\b/i,
-      /\b(?:will|would|could|should|may|might|must)\s+\w+\b/i,
-      /\b(?:is|are|was|were)\s+\w+ed\b/i,
-      /\b(?:has|have|had)\s+\w+ed\b/i,
-    ];
-    let hit = null;
-    for (const p of patterns) { const m = clean.match(p); if (m) { hit = m[0]; break; } }
-    if (!hit) {
-      const words = [...clean.matchAll(/\b[a-zA-Z]{5,}\b/g)].filter(w => isContent(w[0]));
-      if (words.length) hit = words.reduce((a,b) => b[0].length > a[0].length ? b : a)[0];
-    }
-    if (!hit) return [{ text: clean, isBlank: false }];
-    const idx = clean.indexOf(hit);
-    const parts = [];
-    if (idx > 0) parts.push({ text: clean.slice(0, idx), isBlank: false });
-    parts.push({ text: hit, isBlank: true, answer: hit });
-    if (idx + hit.length < clean.length) parts.push({ text: clean.slice(idx + hit.length), isBlank: false });
+    const clean=cleanEn(en);
+    const patterns=[/\b(?:have|has|had)\s+been\s+\w+ing\b/i,/\b(?:would|could|should|might)\s+have\s+\w+ed\b/i,/\b(?:has|have|had)\s+been\s+\w+ed\b/i,/\b(?:will|would|could|should|may|might|must)\s+\w+\b/i,/\b(?:is|are|was|were)\s+\w+ed\b/i,/\b(?:has|have|had)\s+\w+ed\b/i];
+    let hit=null;
+    for(const p of patterns){const m=clean.match(p);if(m){hit=m[0];break;}}
+    if(!hit){const ws=[...clean.matchAll(/\b[a-zA-Z]{5,}\b/g)].filter(w=>isContent(w[0]));if(ws.length)hit=ws.reduce((a,b)=>b[0].length>a[0].length?b:a)[0];}
+    if(!hit) return [{text:clean,isBlank:false}];
+    const idx=clean.indexOf(hit);const parts=[];
+    if(idx>0)parts.push({text:clean.slice(0,idx),isBlank:false});
+    parts.push({text:hit,isBlank:true,answer:hit});
+    if(idx+hit.length<clean.length)parts.push({text:clean.slice(idx+hit.length),isBlank:false});
     return parts;
   }
-
-  // ── Level 2 ──
-  if (level === 2) {
-    const clean = cleanEn(en);
-    const tokens = tokenize(en);
-    const parts = [];
-    for (const tok of tokens) {
-      if (!tok.isPunct && isContent(tok.word)) {
-        parts.push({ text: tok.word, isBlank: true, answer: tok.word });
-      } else {
-        // merge with previous non-blank if possible
-        if (parts.length && !parts[parts.length-1].isBlank) {
-          parts[parts.length-1].text += tok.word;
-        } else {
-          parts.push({ text: tok.word, isBlank: false });
-        }
-      }
+  if(level===2){
+    const tokens=tokenize(en);const parts=[];
+    for(const tok of tokens){
+      if(!tok.isPunct && isContent(tok.word)) parts.push({text:tok.word,isBlank:true,answer:tok.word});
+      else { if(parts.length&&!parts[parts.length-1].isBlank) parts[parts.length-1].text+=tok.word; else parts.push({text:tok.word,isBlank:false}); }
     }
-    // guarantee at least 1 blank
-    if (!parts.some(p => p.isBlank)) return buildParts(card, 1);
+    if(!parts.some(p=>p.isBlank)) return buildParts(card,1);
     return parts;
   }
-
-  // ── Level 3 ──
-  if (level === 3) {
-    const tokens = tokenize(en);
-    const parts = [];
-    for (const tok of tokens) {
-      if (!tok.isPunct) {
-        const ans = hasManual(en) ? tok.word.replace(/\[|\]/g,'') : tok.word;
-        parts.push({ text: ans, isBlank: true, answer: ans, charHint: ans.length });
-      } else {
-        if (parts.length && !parts[parts.length-1].isBlank) {
-          parts[parts.length-1].text += tok.word;
-        } else {
-          parts.push({ text: tok.word, isBlank: false });
-        }
-      }
+  if(level===3){
+    const tokens=tokenize(en);const parts=[];
+    for(const tok of tokens){
+      if(!tok.isPunct){const ans=hasManual(en)?tok.word.replace(/\[|\]/g,''):tok.word;parts.push({text:ans,isBlank:true,answer:ans,charHint:ans.length});}
+      else{if(parts.length&&!parts[parts.length-1].isBlank)parts[parts.length-1].text+=tok.word;else parts.push({text:tok.word,isBlank:false});}
     }
     return parts;
   }
 }
 
-// ═══════════════════
-//  STUDY mode
-// ═══════════════════
+// ═══════════════════════════════════════════
+//  STUDY – SETUP
+// ═══════════════════════════════════════════
+// studySrc: 'all'|'user'|'builtin'|'weak'
+// studyCount: number | 'all'
+// studyTag: tag string | 'すべて'
+let studySrc   = 'all';
+let studyCount = 'all';
+let studyTag   = 'すべて';
+
+function getStudyBasePool() {
+  const weakAll = allWeak();
+  if (studySrc==='weak')    return weakAll;
+  if (studySrc==='user')    return cards;
+  if (studySrc==='builtin') return builtinCards;
+  return [...cards, ...builtinCards];
+}
+
+function getStudyPool() {
+  let pool = getStudyBasePool();
+  if (studyTag!=='すべて') pool = pool.filter(c=>c.tag===studyTag);
+  return pool;
+}
+
+function renderStudySetup() {
+  const el = document.getElementById('study-content');
+  const pool   = getStudyPool();
+  const weakN  = allWeak().length;
+  const userTags  = ['すべて',...new Set(cards.map(c=>c.tag).filter(Boolean))];
+  const builtinTags = ['すべて',...new Set(builtinCards.map(c=>c.tag).filter(Boolean))];
+  const allTags   = ['すべて',...new Set([...cards,...builtinCards].map(c=>c.tag).filter(Boolean))];
+  const tags = studySrc==='user'?userTags:studySrc==='builtin'?builtinTags:studySrc==='weak'?['すべて',...new Set(allWeak().map(c=>c.tag).filter(Boolean))]:allTags;
+
+  const srcChips = [
+    { v:'all',     label:`すべて (${cards.length+builtinCards.length})`, cls:'sel-aqua' },
+    { v:'user',    label:`マイ例文 (${cards.length})`,                   cls:'sel-aqua' },
+    { v:'builtin', label:`旧帝大例文 (${builtinCards.length})`,          cls:'sel-gold' },
+    { v:'weak',    label:`苦手のみ 🔥 (${weakN})`,                       cls:'sel-weak' },
+  ].map(o=>`<button class="chip ${studySrc===o.v?o.cls:''}" onclick="setSrc('study','${o.v}')">${o.label}</button>`).join('');
+
+  const tagChips = tags.map(t=>`<button class="chip ${studyTag===t?'sel-aqua':''}" onclick="setStudyTag('${escHtml(t)}')">${escHtml(t)}</button>`).join('');
+
+  const counts=[5,10,20,50,'all'];
+  const countChips = counts.map(n=>`<button class="chip ${studyCount===n?'sel-warn':''}" onclick="setStudyCount(${typeof n==='number'?n:'"all"'})">${n==='all'?'全部':n+'問'}</button>`).join('');
+
+  el.innerHTML = `
+    <div class="setup-panel">
+      <div class="setup-panel-title">📖 暗記セッション設定</div>
+      <div class="setup-row"><span class="setup-label">対象</span><div class="chip-group">${srcChips}</div></div>
+      <div class="setup-row"><span class="setup-label">カテゴリ</span><div class="chip-group">${tagChips}</div></div>
+      <div class="setup-row"><span class="setup-label">枚数</span><div class="chip-group">${countChips}</div></div>
+      <div class="setup-row"><span class="setup-label" style="color:var(--muted);font-size:.72rem">対象: <b style="color:var(--cream)">${pool.length}</b>枚 / 選択: <b style="color:var(--aqua)">${studyCount==='all'?pool.length:Math.min(+studyCount,pool.length)}</b>枚</span></div>
+      <button class="start-btn" onclick="startStudy()">スタート →</button>
+    </div>`;
+}
+
+function setSrc(mode, src) {
+  if (mode==='study') { studySrc=src; studyTag='すべて'; renderStudySetup(); }
+  else                { fillSrc=src;  fillTag='すべて';  renderFillSetup(); }
+}
+function setStudyTag(t)  { studyTag=t; renderStudySetup(); }
+function setStudyCount(n){ studyCount=n; renderStudySetup(); }
+
+// ═══════════════════════════════════════════
+//  STUDY – SESSION
+// ═══════════════════════════════════════════
 let studyQueue=[], studyIdx=0, flipped=false;
 
-function initStudy() {
-  studyQueue = [...cards].sort(()=>Math.random()-.5);
-  studyIdx=0; flipped=false; renderStudy();
+function startStudy() {
+  let pool = [...getStudyPool()].sort(()=>Math.random()-.5);
+  if (studyCount!=='all') pool = pool.slice(0, +studyCount);
+  if (!pool.length) { showToast('対象の例文がありません', 'red'); return; }
+  studyQueue=[...pool]; studyIdx=0; flipped=false;
+  renderStudyCard();
 }
 
-function renderStudy() {
+function renderStudyCard() {
   const el = document.getElementById('study-content');
-  if (!cards.length) { el.innerHTML = emptyHtml(); return; }
-  if (studyIdx >= studyQueue.length) { el.innerHTML = completeHtml(studyQueue.length, false); return; }
+  if (studyIdx>=studyQueue.length) { el.innerHTML = studyCompleteHtml(); return; }
   const card = studyQueue[studyIdx];
+  const isB  = String(card.id).startsWith('b');
+  const weak = card.weak||0;
   const pct  = Math.round(studyIdx/studyQueue.length*100);
+
   el.innerHTML = `
     <div class="progress-bar-wrap"><div class="progress-bar" style="width:${pct}%"></div></div>
     <div class="counter">${studyIdx+1} / ${studyQueue.length}</div>
     <div class="card-scene"><div class="card" id="flip-card" onclick="flipCard()">
-      <div class="card-face card-front">
+      <div class="card-face card-front ${weak>=2?'is-weak':''}">
+        ${weak>=2?`<div class="weak-badge">🔥 苦手 ×${weak}</div>`:(isB?'<div class="builtin-badge">⭐ 旧帝大</div>':'')}
         <div class="card-label">English</div>
         <div class="card-english">${escHtml(cleanEn(card.en))}</div>
-        ${card.tag ? `<div class="list-tag">${escHtml(card.tag)}</div>` : ''}
+        ${card.tag?`<div class="list-tag ${isB?'builtin-tag':''}">${escHtml(card.tag)}</div>`:''}
         <div class="flip-hint">タップして日本語を確認</div>
       </div>
       <div class="card-face card-back">
         <div class="card-label">日本語訳</div>
         <div class="card-japanese">${escHtml(card.jp)}</div>
-        ${card.note ? `<div class="card-note">💡 ${escHtml(card.note)}</div>` : ''}
+        ${card.note?`<div class="card-note">💡 ${escHtml(card.note)}</div>`:''}
       </div>
     </div></div>
     <div class="study-actions" id="answer-actions" style="display:none">
@@ -491,172 +526,447 @@ function renderStudy() {
     </div>
     <div class="action-labels" id="answer-labels" style="display:none">
       <div class="action-label">もう一度</div><div class="action-label">難しい</div><div class="action-label">わかった</div>
+    </div>
+    <div style="text-align:center;margin-top:16px">
+      <button class="chip" style="font-size:.72rem" onclick="renderStudySetup()">← セッション設定に戻る</button>
     </div>`;
 }
 
 function flipCard() {
-  flipped = !flipped;
-  document.getElementById('flip-card').classList.toggle('flipped', flipped);
-  if (flipped) {
-    document.getElementById('answer-actions').style.display = 'flex';
-    document.getElementById('answer-labels').style.display  = 'flex';
+  flipped=!flipped;
+  document.getElementById('flip-card').classList.toggle('flipped',flipped);
+  if(flipped){
+    document.getElementById('answer-actions').style.display='flex';
+    document.getElementById('answer-labels').style.display='flex';
   }
 }
 
 function studyAnswer(level) {
   const card = studyQueue[studyIdx];
-  const c = cards.find(c=>c.id===card.id);
-  if (c) { if (level==='good') c.score++; else if (level==='wrong') c.score=Math.max(0,c.score-1); save(); }
-  if (level==='wrong') studyQueue.push(card);
-  studyIdx++; flipped=false; renderStudy();
+  const isB  = String(card.id).startsWith('b');
+  function update(c) {
+    if(level==='good')  { c.score++; if(c.weak>0)c.weak=Math.max(0,c.weak-1); }
+    if(level==='hard')  { /* no change */ }
+    if(level==='wrong') { c.score=Math.max(0,c.score-1); c.weak=(c.weak||0)+1; }
+  }
+  if(isB){ const c=builtinCards.find(x=>x.id===card.id); if(c){update(c);saveBuiltin();} }
+  else   { const c=cards.find(x=>x.id===card.id);         if(c){update(c);saveUser();}   }
+  // ✗の場合はキューの末尾に追加
+  if(level==='wrong') studyQueue.push(card);
+  studyIdx++; flipped=false; renderStudyCard();
 }
 
-// ═══════════════════
-//  FILL-IN mode
-// ═══════════════════
-let fillQueue=[], fillIdx=0, fillLevel=1, fillChecked=false, fillCorrect=0;
+function studyCompleteHtml() {
+  const wrongN = allWeak().length;
+  return `<div class="complete-screen">
+    <div class="complete-icon">🎉</div>
+    <div class="complete-title">セッション完了！</div>
+    <div class="complete-sub">${studyQueue.filter((c,i,a)=>a.findIndex(x=>x.id===c.id)===i).length}枚確認しました。</div>
+    <button class="restart-btn" onclick="startStudy()">もう一度</button>
+    ${wrongN?`<button class="restart-btn weak" onclick="quickWeakStudy()">🔥 苦手だけやり直す (${wrongN})</button>`:''}
+    <button class="restart-btn fill" onclick="showScreen('fill')">穴埋めに挑戦</button>
+    <button class="restart-btn" style="background:transparent;color:var(--muted);border:1.5px solid var(--navy3)" onclick="renderStudySetup()">← 設定に戻る</button>
+  </div>`;
+}
+
+function quickWeakStudy() {
+  const pool = [...allWeak()].sort(()=>Math.random()-.5);
+  if(!pool.length){showToast('苦手例文はありません！','');return;}
+  studyQueue=[...pool]; studyIdx=0; flipped=false;
+  renderStudyCard();
+}
+
+// ═══════════════════════════════════════════
+//  FILL – SETUP
+// ═══════════════════════════════════════════
+let fillSrc   = 'all';
+let fillCount = 'all';
+let fillTag   = 'すべて';
+let fillLevel = 1;
 
 const LV_INFO = {
-  1: { label:'かんたん', icon:'🟢', desc:'重要フレーズのみ' },
-  2: { label:'ふつう',   icon:'🟡', desc:'内容語を穴埋め' },
-  3: { label:'むずかしい',icon:'🔴', desc:'全単語を入力' },
+  1:{label:'かんたん',   icon:'🟢', desc:'重要フレーズのみ'},
+  2:{label:'ふつう',     icon:'🟡', desc:'内容語を穴埋め'},
+  3:{label:'むずかしい', icon:'🔴', desc:'全単語を穴埋め'},
 };
 
-function initFill() {
-  fillQueue = [...cards].sort(()=>Math.random()-.5);
-  fillIdx=0;
-  renderFill();
+function getFillBasePool() {
+  if(fillSrc==='weak')    return allWeak();
+  if(fillSrc==='user')    return cards;
+  if(fillSrc==='builtin') return builtinCards;
+  return [...cards,...builtinCards];
+}
+function getFillPool() {
+  let pool=getFillBasePool();
+  if(fillTag!=='すべて') pool=pool.filter(c=>c.tag===fillTag);
+  return pool;
 }
 
-function setLevel(lv) {
-  fillLevel = lv;
-  fillIdx=0;
-  fillQueue = [...cards].sort(()=>Math.random()-.5);
-  renderFill();
-}
-
-function renderFill() {
+function renderFillSetup() {
   const el = document.getElementById('fill-content');
-  if (!cards.length) { el.innerHTML = emptyHtml(); return; }
-  if (fillIdx >= fillQueue.length) { el.innerHTML = completeFillHtml(); return; }
+  const pool=getFillPool();
+  const weakN=allWeak().length;
+  const allTags=['すべて',...new Set([...cards,...builtinCards].map(c=>c.tag).filter(Boolean))];
+  const userTags=['すべて',...new Set(cards.map(c=>c.tag).filter(Boolean))];
+  const builtinTags=['すべて',...new Set(builtinCards.map(c=>c.tag).filter(Boolean))];
+  const tags=fillSrc==='user'?userTags:fillSrc==='builtin'?builtinTags:fillSrc==='weak'?['すべて',...new Set(allWeak().map(c=>c.tag).filter(Boolean))]:allTags;
 
-  const card  = fillQueue[fillIdx];
-  const parts = buildParts(card, fillLevel);
-  const pct   = Math.round(fillIdx/fillQueue.length*100);
-  const info  = LV_INFO[fillLevel];
+  const srcChips=[
+    {v:'all',label:`すべて (${cards.length+builtinCards.length})`,cls:'sel-purple'},
+    {v:'user',label:`マイ例文 (${cards.length})`,cls:'sel-purple'},
+    {v:'builtin',label:`旧帝大例文 (${builtinCards.length})`,cls:'sel-gold'},
+    {v:'weak',label:`苦手のみ 🔥 (${weakN})`,cls:'sel-weak'},
+  ].map(o=>`<button class="chip ${fillSrc===o.v?o.cls:''}" onclick="setSrc('fill','${o.v}')">${o.label}</button>`).join('');
 
-  // Build sentence: blanks start hidden, tap to reveal
-  let sentenceHtml = parts.map((p, i) => {
-    if (!p.isBlank) return `<span>${escHtml(p.text)}</span>`;
-    // Show char count inside the hidden block for Lv3, just spaces for others
-    const insideHtml = fillLevel === 3
-      ? `<span class="char-hint">${p.charHint}文字</span>`
-      : `<span style="opacity:0">${escHtml(p.answer)}</span>`; // invisible spacer keeps width
-    return `<span class="fill-blank hidden" data-lv="${fillLevel}" data-answer="${escHtml(p.answer)}" id="blank-${i}" onclick="tapBlank(${i})" title="タップして表示">${insideHtml}</span>`;
+  const tagChips=tags.map(t=>`<button class="chip ${fillTag===t?'sel-purple':''}" onclick="setFillTag('${escHtml(t)}')">${escHtml(t)}</button>`).join('');
+
+  const counts=[5,10,20,50,'all'];
+  const countChips=counts.map(n=>`<button class="chip ${fillCount===n?'sel-warn':''}" onclick="setFillCount(${typeof n==='number'?n:'"all"'})">${n==='all'?'全部':n+'問'}</button>`).join('');
+
+  const lvChips=[1,2,3].map(lv=>`<button class="chip ${fillLevel===lv?'sel-purple':''}" onclick="setFillLevel(${lv})" data-lv="${lv}">${LV_INFO[lv].icon} Lv${lv} ${LV_INFO[lv].label}</button>`).join('');
+
+  el.innerHTML=`
+    <div class="setup-panel">
+      <div class="setup-panel-title">✏️ 穴埋めセッション設定</div>
+      <div class="setup-row"><span class="setup-label">対象</span><div class="chip-group">${srcChips}</div></div>
+      <div class="setup-row"><span class="setup-label">カテゴリ</span><div class="chip-group">${tagChips}</div></div>
+      <div class="setup-row"><span class="setup-label">枚数</span><div class="chip-group">${countChips}</div></div>
+      <div class="setup-row"><span class="setup-label">難易度</span><div class="chip-group">${lvChips}</div></div>
+      <div class="setup-row"><span class="setup-label" style="color:var(--muted);font-size:.72rem">対象: <b style="color:var(--cream)">${pool.length}</b>枚 / 選択: <b style="color:var(--purple)">${fillCount==='all'?pool.length:Math.min(+fillCount,pool.length)}</b>枚</span></div>
+      <button class="start-btn fill-mode" onclick="startFill()">スタート →</button>
+    </div>`;
+}
+
+function setFillTag(t)   { fillTag=t;   renderFillSetup(); }
+function setFillCount(n) { fillCount=n; renderFillSetup(); }
+function setFillLevel(lv){ fillLevel=lv; renderFillSetup(); }
+
+// ═══════════════════════════════════════════
+//  FILL – SESSION
+// ═══════════════════════════════════════════
+let fillQueue=[], fillIdx=0;
+
+function startFill() {
+  let pool=[...getFillPool()].sort(()=>Math.random()-.5);
+  if(fillCount!=='all') pool=pool.slice(0,+fillCount);
+  if(!pool.length){showToast('対象の例文がありません','red');return;}
+  fillQueue=[...pool]; fillIdx=0;
+  renderFillCard();
+}
+
+function renderFillCard() {
+  const el=document.getElementById('fill-content');
+  if(fillIdx>=fillQueue.length){el.innerHTML=fillCompleteHtml();return;}
+  const card=fillQueue[fillIdx];
+  const isB=String(card.id).startsWith('b');
+  const parts=buildParts(card,fillLevel);
+  const pct=Math.round(fillIdx/fillQueue.length*100);
+  const info=LV_INFO[fillLevel];
+
+  let sentenceHtml=parts.map((p,i)=>{
+    if(!p.isBlank) return `<span>${escHtml(p.text)}</span>`;
+    const inside=fillLevel===3
+      ?`<span class="char-hint">${p.charHint}文字</span>`
+      :`<span style="opacity:0">${escHtml(p.answer)}</span>`;
+    return `<span class="fill-blank hidden" data-lv="${fillLevel}" data-answer="${escHtml(p.answer)}" id="blank-${i}" onclick="tapBlank(${i})" title="タップして表示">${inside}</span>`;
   }).join('');
 
-  el.innerHTML = `
-    <div class="progress-bar-wrap"><div class="progress-bar" style="width:${pct}%; background:${fillLevel===1?'var(--lv1)':fillLevel===2?'var(--lv2)':'var(--lv3)'}"></div></div>
-
+  el.innerHTML=`
+    <div class="progress-bar-wrap"><div class="progress-bar" style="width:${pct}%;background:${fillLevel===1?'var(--lv1)':fillLevel===2?'var(--lv2)':'var(--lv3)'}"></div></div>
     <div class="level-selector">
-      ${[1,2,3].map(lv => `
-        <button class="lv-btn ${lv===fillLevel?'selected':''}" data-lv="${lv}" onclick="setLevel(${lv})">
-          <span class="lv-dot"></span>${LV_INFO[lv].label}
-        </button>`).join('')}
+      ${[1,2,3].map(lv=>`<button class="lv-btn ${lv===fillLevel?'selected':''}" data-lv="${lv}" onclick="changeFillLevel(${lv})"><span class="lv-dot"></span>${LV_INFO[lv].label}</button>`).join('')}
     </div>
-
     <div class="counter">${fillIdx+1} / ${fillQueue.length}</div>
-
     <div class="fill-card" data-lv="${fillLevel}">
       <div style="text-align:center;margin-bottom:10px">
         <span class="lv-badge" data-lv="${fillLevel}">${info.icon} Lv.${fillLevel} ${info.label} — ${info.desc}</span>
+        ${isB?' <span class="builtin-badge" style="vertical-align:middle">⭐ 旧帝大</span>':''}
+        ${(card.weak||0)>=2?` <span class="weak-badge" style="vertical-align:middle">🔥 苦手</span>`:''}
       </div>
       <div class="tap-hint">隠れた単語をタップして確認</div>
       <div class="fill-sentence" id="fill-sentence">${sentenceHtml}</div>
       <div class="fill-jp">${escHtml(card.jp)}</div>
-      ${card.note ? `<div class="fill-note">💡 ${escHtml(card.note)}</div>` : ''}
+      ${card.note?`<div class="fill-note">💡 ${escHtml(card.note)}</div>`:''}
       <div class="fill-result" id="fill-result"></div>
       <div class="fill-actions">
-        <button class="fill-btn fill-btn-all" id="btn-all" onclick="revealAll()">全部表示</button>
-        <button class="fill-btn fill-btn-next" id="btn-next" onclick="nextFill()">次へ →</button>
+        <button class="fill-btn fill-btn-all" onclick="revealAll()">全部表示</button>
+        <button class="fill-btn fill-btn-next" onclick="nextFill()">次へ →</button>
       </div>
     </div>
-    <div class="score-row">タップ済み: <b id="sc-revealed">0</b> / <b>${parts.filter(p=>p.isBlank).length}</b> &nbsp;|&nbsp; 問題: <b>${fillIdx+1}</b> / <b>${fillQueue.length}</b></div>`;
+    <div class="score-row">タップ済み: <b id="sc-revealed">0</b> / <b>${parts.filter(p=>p.isBlank).length}</b> &nbsp;|&nbsp; 問題: <b>${fillIdx+1}</b> / <b>${fillQueue.length}</b></div>
+    <div style="text-align:center;margin-top:14px">
+      <button class="chip" style="font-size:.72rem" onclick="renderFillSetup()">← セッション設定に戻る</button>
+    </div>`;
 }
 
-// Tap a single blank to reveal it
+function changeFillLevel(lv) { fillLevel=lv; renderFillCard(); }
+
 function tapBlank(i) {
-  const wrap = document.getElementById(`blank-${i}`);
-  if (!wrap || !wrap.classList.contains('hidden')) return;
-  const answer = wrap.dataset.answer;
-  wrap.classList.remove('hidden');
-  wrap.classList.add('revealed');
-  wrap.innerHTML = escHtml(answer);
-  wrap.onclick = null; // disable further taps
+  const wrap=document.getElementById(`blank-${i}`);
+  if(!wrap||!wrap.classList.contains('hidden')) return;
+  wrap.classList.remove('hidden'); wrap.classList.add('revealed');
+  wrap.innerHTML=escHtml(wrap.dataset.answer); wrap.onclick=null;
   updateRevealCount();
 }
-
 function updateRevealCount() {
-  const total    = document.querySelectorAll('.fill-blank').length;
-  const revealed = document.querySelectorAll('.fill-blank.revealed, .fill-blank.all-revealed').length;
-  const sc = document.getElementById('sc-revealed');
-  if (sc) sc.textContent = revealed;
-  if (revealed === total) {
-    const res = document.getElementById('fill-result');
-    if (res && !res.textContent) {
-      res.textContent = '✅ 全部確認しました！'; res.className = 'fill-result ok';
-    }
-  }
+  const total=document.querySelectorAll('.fill-blank').length;
+  const revealed=document.querySelectorAll('.fill-blank.revealed,.fill-blank.all-revealed').length;
+  const sc=document.getElementById('sc-revealed'); if(sc) sc.textContent=revealed;
+  if(revealed===total){const res=document.getElementById('fill-result');if(res&&!res.textContent){res.textContent='✅ 全部確認しました！';res.className='fill-result ok';}}
 }
-
 function revealAll() {
-  document.querySelectorAll('.fill-blank.hidden').forEach(wrap => {
-    const answer = wrap.dataset.answer;
-    wrap.classList.remove('hidden');
-    wrap.classList.add('all-revealed');
-    wrap.innerHTML = escHtml(answer);
-    wrap.onclick = null;
-  });
+  document.querySelectorAll('.fill-blank.hidden').forEach(w=>{w.classList.remove('hidden');w.classList.add('all-revealed');w.innerHTML=escHtml(w.dataset.answer);w.onclick=null;});
   updateRevealCount();
-  const res = document.getElementById('fill-result');
-  if (res) { res.textContent = '💡 すべて表示しました'; res.className = 'fill-result partial'; }
+  const res=document.getElementById('fill-result');if(res){res.textContent='💡 すべて表示しました';res.className='fill-result partial';}
 }
+function nextFill() { fillIdx++; renderFillCard(); }
 
-function nextFill() { fillIdx++; renderFill(); }
-
-function completeFillHtml() {
+function fillCompleteHtml() {
+  const wrongN=allWeak().length;
   return `<div class="complete-screen">
     <div class="complete-icon">✏️</div>
     <div class="complete-title fill">穴埋め完了！</div>
     <div class="complete-sub">Lv.${fillLevel} ${LV_INFO[fillLevel].label} — ${fillQueue.length}問すべて確認</div>
-    <button class="restart-btn fill" onclick="setLevel(${fillLevel})">同じレベルで再挑戦</button>
-    ${fillLevel < 3 ? `<button class="restart-btn fill" onclick="setLevel(${fillLevel+1})">Lv.${fillLevel+1}に挑戦 →</button>` : ''}
+    <button class="restart-btn fill" onclick="startFill()">同じ設定で再挑戦</button>
+    ${wrongN?`<button class="restart-btn weak" onclick="quickWeakFill()">🔥 苦手だけやり直す (${wrongN})</button>`:''}
     <button class="restart-btn" onclick="showScreen('study')">暗記モードへ</button>
+    <button class="restart-btn" style="background:transparent;color:var(--muted);border:1.5px solid var(--navy3)" onclick="renderFillSetup()">← 設定に戻る</button>
   </div>`;
 }
 
-// ═══════════════════
+function quickWeakFill() {
+  const pool=[...allWeak()].sort(()=>Math.random()-.5);
+  if(!pool.length){showToast('苦手例文はありません！');return;}
+  fillQueue=[...pool]; fillIdx=0; renderFillCard();
+}
+
+// ═══════════════════════════════════════════
 //  MANAGE
-// ═══════════════════
+// ═══════════════════════════════════════════
+let manageTab       = 'user';
+let builtinFilterTag= 'すべて';
+let builtinSearch   = '';
+let userSearch      = '';
+let userFilterTag   = 'すべて';
+
 function renderManage() {
-  document.getElementById('stats-row').innerHTML = `
+  const el=document.getElementById('manage-content');
+  const weakN=allWeak().length;
+  el.innerHTML=`
+    <div class="section-title">例文を追加・管理</div>
+    <div class="section-sub">マイ例文の追加と旧帝大プリセット例文の確認ができます</div>
+    <div class="manage-tabs">
+      <button class="manage-tab ${manageTab==='user'?'active-user':''}"    onclick="switchTab('user')">📝 マイ例文 (${cards.length})</button>
+      <button class="manage-tab ${manageTab==='builtin'?'active-builtin':''}" onclick="switchTab('builtin')">⭐ 旧帝大 (${builtinCards.length})</button>
+      <button class="manage-tab ${manageTab==='weak'?'active-weak':''}"    onclick="switchTab('weak')">🔥 苦手 (${weakN})</button>
+    </div>
+    <div id="tab-body">
+      ${manageTab==='user'?renderUserTab():manageTab==='builtin'?renderBuiltinTab():renderWeakTab()}
+    </div>`;
+}
+
+function switchTab(tab) { manageTab=tab; renderManage(); }
+
+/* ── User tab ── */
+function renderUserTab() {
+  const tags=['すべて',...new Set(cards.map(c=>c.tag).filter(Boolean))];
+  let filtered=cards;
+  if(userFilterTag!=='すべて') filtered=filtered.filter(c=>c.tag===userFilterTag);
+  if(userSearch) {const q=userSearch.toLowerCase(); filtered=filtered.filter(c=>cleanEn(c.en).toLowerCase().includes(q)||c.jp.includes(q)||(c.note||'').toLowerCase().includes(q));}
+
+  const statsHtml=`<div class="stats-row">
     <div class="stat-card"><div class="stat-num">${cards.length}</div><div class="stat-lbl">合計</div></div>
     <div class="stat-card"><div class="stat-num">${cards.filter(c=>c.score>=3).length}</div><div class="stat-lbl">習得済み</div></div>
     <div class="stat-card"><div class="stat-num">${cards.filter(c=>c.score===0).length}</div><div class="stat-lbl">未学習</div></div>
-    <div class="stat-card"><div class="stat-num">${cards.filter(c=>hasManual(c.en)).length}</div><div class="stat-lbl">手動穴</div></div>`;
-  const el = document.getElementById('cards-list');
-  if (!cards.length) { el.innerHTML='<p style="color:var(--muted);text-align:center;padding:20px">例文はまだありません</p>'; return; }
-  el.innerHTML = cards.map((c,i) => {
-    const displayEn = c.en.replace(/\[([^\]]+)\]/g,'<span class="manual-blank">[$1]</span>');
-    return `<div class="list-item">
+    <div class="stat-card stat-weak" onclick="switchTab('weak')" title="苦手一覧を見る"><div class="stat-num red">${cards.filter(c=>isWeak(c)).length}</div><div class="stat-lbl">苦手 🔥</div></div>
+  </div>`;
+
+  const formHtml=`<div class="add-form">
+    <div class="form-row">
+      <div class="form-group full"><label>英語の例文</label>
+        <textarea id="inp-en" placeholder="例: She has been studying English for three years."></textarea>
+        <div class="hint-text">重要箇所: <code>[単語]</code> で囲む。例: <code>She has [been studying] English for [three years].</code></div>
+      </div>
+      <div class="form-group full"><label>日本語訳</label>
+        <textarea id="inp-jp" placeholder="例: 彼女は3年間英語を勉強し続けています。"></textarea>
+      </div>
+      <div class="form-group"><label>メモ（任意）</label><input id="inp-note" type="text" placeholder="文法ポイントや使い方など"></div>
+      <div class="form-group"><label>カテゴリ（任意）</label>
+        <input id="inp-tag" type="text" placeholder="例: 仮定法、英作文頻出" list="tag-datalist">
+        <datalist id="tag-datalist">${tags.filter(t=>t!=='すべて').map(t=>`<option value="${escHtml(t)}">`).join('')}</datalist>
+      </div>
+    </div>
+    <button class="add-btn" onclick="addCard()">＋ 追加する</button>
+  </div>`;
+
+  const ctrlHtml=`<div class="list-controls">
+    <input type="text" placeholder="🔍 検索…" value="${escHtml(userSearch)}" oninput="userSearch=this.value;renderManage()">
+    <select class="filter-select" onchange="userFilterTag=this.value;renderManage()">
+      ${tags.map(t=>`<option value="${escHtml(t)}" ${t===userFilterTag?'selected':''}>${escHtml(t)}</option>`).join('')}
+    </select>
+    <span class="count-badge">${filtered.length}件</span>
+  </div>`;
+
+  // グループ表示（カテゴリでまとめる）
+  let listHtml='';
+  if(userFilterTag==='すべて' && !userSearch) {
+    // タグごとにグループ化
+    const groupMap=new Map();
+    filtered.forEach(c=>{const k=c.tag||'（未分類）';if(!groupMap.has(k))groupMap.set(k,[]);groupMap.get(k).push(c);});
+    // 未分類を最後
+    const order=[...new Set(cards.map(c=>c.tag||'（未分類）').filter(Boolean))];
+    order.forEach(tag=>{
+      if(!groupMap.has(tag))return;
+      const grp=groupMap.get(tag);
+      listHtml+=`<div class="group-header"><div class="group-header-line"></div><span class="group-header-label">${escHtml(tag)}</span><span class="group-count">${grp.length}件</span><div class="group-header-line"></div></div>`;
+      listHtml+=grp.map((c,_i)=>userCardHtml(c,cards.indexOf(c))).join('');
+    });
+    if(groupMap.has('（未分類）')){
+      const grp=groupMap.get('（未分類）');
+      listHtml+=`<div class="group-header"><div class="group-header-line"></div><span class="group-header-label">（未分類）</span><span class="group-count">${grp.length}件</span><div class="group-header-line"></div></div>`;
+      listHtml+=grp.map(c=>userCardHtml(c,cards.indexOf(c))).join('');
+    }
+  } else {
+    listHtml=filtered.length?filtered.map(c=>userCardHtml(c,cards.indexOf(c))).join(''):`<p style="color:var(--muted);text-align:center;padding:20px">該当する例文がありません</p>`;
+  }
+  if(!cards.length) listHtml=`<p style="color:var(--muted);text-align:center;padding:20px">例文はまだありません</p>`;
+
+  return statsHtml+formHtml+ctrlHtml+`<div class="cards-list">${listHtml}</div>`;
+}
+
+function userCardHtml(c,i) {
+  const displayEn=c.en.replace(/\[([^\]]+)\]/g,'<span class="manual-blank">[$1]</span>');
+  const weakN=c.weak||0;
+  return `<div class="list-item ${isWeak(c)?'weak-item':''}">
+    <div class="list-item-content">
+      <div class="list-en">${displayEn}</div>
+      <div class="list-jp">${escHtml(c.jp)}</div>
+      ${c.note?`<div class="list-note">💡 ${escHtml(c.note)}</div>`:''}
+      <div class="list-meta">
+        ${c.tag?`<span class="list-tag">${escHtml(c.tag)}</span>`:''}
+        ${weakN>0?`<span class="weak-pill">🔥 苦手 ×${weakN}</span>`:''}
+        ${c.score>0?`<span style="font-size:.65rem;color:var(--success)">✓ ${c.score}回正解</span>`:''}
+      </div>
+    </div>
+    <div class="list-actions">
+      ${weakN>0?`<button class="icon-btn" onclick="clearWeak(${i},'user')" title="苦手をリセット">🔄</button>`:''}
+      <button class="icon-btn" onclick="deleteCard(${i})" title="削除">🗑</button>
+    </div>
+  </div>`;
+}
+
+/* ── Builtin tab ── */
+function renderBuiltinTab() {
+  const tags=['すべて',...new Set(builtinCards.map(c=>c.tag).filter(Boolean))];
+  let filtered=builtinCards;
+  if(builtinFilterTag!=='すべて') filtered=filtered.filter(c=>c.tag===builtinFilterTag);
+  if(builtinSearch){const q=builtinSearch.toLowerCase();filtered=filtered.filter(c=>cleanEn(c.en).toLowerCase().includes(q)||c.jp.includes(q)||(c.note||'').toLowerCase().includes(q));}
+
+  const statsHtml=`<div class="stats-row">
+    <div class="stat-card"><div class="stat-num">${builtinCards.length}</div><div class="stat-lbl">合計</div></div>
+    <div class="stat-card"><div class="stat-num">${builtinCards.filter(c=>c.score>=3).length}</div><div class="stat-lbl">習得済み</div></div>
+    <div class="stat-card stat-weak" onclick="switchTab('weak')" title="苦手一覧を見る"><div class="stat-num red">${builtinCards.filter(c=>isWeak(c)).length}</div><div class="stat-lbl">苦手 🔥</div></div>
+  </div>`;
+
+  const ctrlHtml=`<div class="list-controls">
+    <input type="text" placeholder="🔍 検索…" value="${escHtml(builtinSearch)}" oninput="builtinSearch=this.value;renderManage()">
+    <select class="filter-select" style="border-color:rgba(245,158,11,.3)" onchange="builtinFilterTag=this.value;renderManage()">
+      ${tags.map(t=>`<option value="${escHtml(t)}" ${t===builtinFilterTag?'selected':''}>${escHtml(t)}</option>`).join('')}
+    </select>
+    <span class="count-badge">${filtered.length}件</span>
+  </div>`;
+
+  // グループ表示
+  let listHtml='';
+  if(builtinFilterTag==='すべて' && !builtinSearch) {
+    const groupMap=new Map();
+    filtered.forEach(c=>{const k=c.tag||'その他';if(!groupMap.has(k))groupMap.set(k,[]);groupMap.get(k).push(c);});
+    groupMap.forEach((grp,tag)=>{
+      listHtml+=`<div class="group-header"><div class="group-header-line gold"></div><span class="group-header-label gold">${escHtml(tag)}</span><span class="group-count">${grp.length}件</span><div class="group-header-line gold"></div></div>`;
+      listHtml+=grp.map(c=>builtinCardHtml(c)).join('');
+    });
+  } else {
+    listHtml=filtered.length?filtered.map(c=>builtinCardHtml(c)).join(''):`<p style="color:var(--muted);text-align:center;padding:20px">該当する例文がありません</p>`;
+  }
+
+  return `<div style="color:var(--muted);font-size:.82rem;margin-bottom:16px;line-height:1.6">旧帝大（東大・京大・阪大・東北大など）英作文・文法問題で差をつける例文です。📋 でマイ例文にコピーできます。</div>
+  ${statsHtml}${ctrlHtml}<div class="cards-list">${listHtml}</div>`;
+}
+
+function builtinCardHtml(c) {
+  const displayEn=c.en.replace(/\[([^\]]+)\]/g,'<span class="manual-blank">[$1]</span>');
+  const weakN=c.weak||0;
+  return `<div class="list-item builtin-item ${isWeak(c)?'weak-item':''}">
+    <div class="list-item-content">
+      <div class="list-en">${displayEn}</div>
+      <div class="list-jp">${escHtml(c.jp)}</div>
+      ${c.note?`<div class="list-note">💡 ${escHtml(c.note)}</div>`:''}
+      <div class="list-meta">
+        ${c.tag?`<span class="list-tag builtin-tag">${escHtml(c.tag)}</span>`:''}
+        ${weakN>0?`<span class="weak-pill">🔥 苦手 ×${weakN}</span>`:''}
+        ${c.score>0?`<span style="font-size:.65rem;color:var(--success)">✓ ${c.score}回正解</span>`:''}
+      </div>
+    </div>
+    <div class="list-actions">
+      ${weakN>0?`<button class="icon-btn" onclick="clearWeak('${c.id}','builtin')" title="苦手をリセット">🔄</button>`:''}
+      <button class="icon-btn copy-btn" onclick="copyToMy('${c.id}')" title="マイ例文にコピー">📋</button>
+    </div>
+  </div>`;
+}
+
+/* ── Weak tab ── */
+function renderWeakTab() {
+  const weak=allWeak().sort((a,b)=>(b.weak||0)-(a.weak||0));
+  if(!weak.length) return `<div class="empty-state"><div class="icon">🎉</div><p>苦手な例文はありません！<br>暗記モードで ✗ を押すと苦手として記録されます。</p></div>`;
+
+  const listHtml=weak.map(c=>{
+    const isB=String(c.id).startsWith('b');
+    const displayEn=c.en.replace(/\[([^\]]+)\]/g,'<span class="manual-blank">[$1]</span>');
+    const weakN=c.weak||0;
+    return `<div class="list-item weak-item">
       <div class="list-item-content">
         <div class="list-en">${displayEn}</div>
         <div class="list-jp">${escHtml(c.jp)}</div>
-        ${c.tag?`<span class="list-tag">${escHtml(c.tag)}</span>`:''}
+        ${c.note?`<div class="list-note">💡 ${escHtml(c.note)}</div>`:''}
+        <div class="list-meta">
+          ${c.tag?`<span class="list-tag ${isB?'builtin-tag':''}">${escHtml(c.tag)}</span>`:''}
+          <span class="weak-pill">🔥 苦手 ×${weakN}</span>
+          ${isB?'<span style="font-size:.65rem;color:var(--gold)">⭐ 旧帝大</span>':''}
+        </div>
       </div>
-      <div class="list-actions"><button class="icon-btn" onclick="deleteCard(${i})">🗑</button></div>
+      <div class="list-actions">
+        <button class="icon-btn" onclick="clearWeak(${isB?`'${c.id}'`:`${cards.indexOf(c)}`},'${isB?'builtin':'user'}')" title="苦手をリセット">🔄</button>
+      </div>
     </div>`;
   }).join('');
+
+  return `<div style="margin-bottom:16px;display:flex;gap:10px;flex-wrap:wrap">
+    <button class="start-btn" style="background:rgba(255,107,107,.18);color:var(--weak);border:1.5px solid var(--weak)" onclick="quickWeakStudy();showScreen('study')">🔥 苦手を暗記する (${weak.length})</button>
+    <button class="start-btn fill-mode" style="background:rgba(255,107,107,.15)" onclick="quickWeakFill();showScreen('fill')">🔥 苦手を穴埋めする (${weak.length})</button>
+  </div>
+  <div style="color:var(--muted);font-size:.78rem;margin-bottom:14px">✗（もう一度）を2回以上押した例文が表示されます。🔄 でリセット。</div>
+  <div class="group-header"><div class="group-header-line weak-line"></div><span class="group-header-label weak-label">苦手例文 — 多い順</span><span class="group-count">${weak.length}件</span><div class="group-header-line weak-line"></div></div>
+  <div class="cards-list">${listHtml}</div>`;
+}
+
+function clearWeak(ref, type) {
+  if(type==='builtin') {
+    const c=builtinCards.find(x=>x.id===ref);
+    if(c){c.weak=0;saveBuiltin();}
+  } else {
+    const c=cards[ref];
+    if(c){c.weak=0;saveUser();}
+  }
+  showToast('🔄 苦手をリセットしました');
+  renderManage();
+}
+
+function copyToMy(builtinId) {
+  const src=builtinCards.find(c=>c.id===builtinId);
+  if(!src)return;
+  cards.push({...src,id:Date.now(),score:0,weak:0}); saveUser();
+  showToast('📋 マイ例文にコピーしました！','gold');
+  renderManage();
 }
 
 function addCard() {
@@ -664,38 +974,27 @@ function addCard() {
   const jp=document.getElementById('inp-jp').value.trim();
   const note=document.getElementById('inp-note').value.trim();
   const tag=document.getElementById('inp-tag').value.trim();
-  if (!en||!jp) { alert('英語と日本語訳は必須です。'); return; }
-  cards.push({ id:Date.now(), en, jp, note, tag, score:0 });
-  save();
+  if(!en||!jp){alert('英語と日本語訳は必須です。');return;}
+  cards.push({id:Date.now(),en,jp,note,tag,score:0,weak:0}); saveUser();
   ['inp-en','inp-jp','inp-note','inp-tag'].forEach(id=>document.getElementById(id).value='');
+  showToast('✅ 例文を追加しました！');
   renderManage();
 }
 
 function deleteCard(i) {
-  if (!confirm('この例文を削除しますか？')) return;
-  cards.splice(i,1); save(); renderManage();
+  if(!confirm('この例文を削除しますか？'))return;
+  cards.splice(i,1); saveUser(); renderManage();
 }
 
-// ═══════════════════
-//  Helpers
-// ═══════════════════
-function emptyHtml() {
-  return `<div class="empty-state"><div class="icon">📚</div><p>まだ例文がありません。<br>「管理」タブから追加してください。</p></div>`;
-}
-function completeHtml(total, isFill) {
-  return `<div class="complete-screen">
-    <div class="complete-icon">🎉</div>
-    <div class="complete-title">セッション完了！</div>
-    <div class="complete-sub">${total}枚すべて確認しました。</div>
-    <button class="restart-btn" onclick="initStudy()">もう一度</button>
-    <button class="restart-btn fill" onclick="showScreen('fill')">穴埋めに挑戦</button>
-  </div>`;
-}
+// ═══════════════════════════════════════════
+//  HELPERS
+// ═══════════════════════════════════════════
 function escHtml(s) {
   return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
-initStudy();
+// ─── init ───
+renderStudySetup();
 </script>
 </body>
 </html>
