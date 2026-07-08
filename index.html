@@ -241,6 +241,8 @@ textarea { resize:vertical; min-height:66px; line-height:1.6; }
 .icon-btn:hover { background:rgba(255,107,107,.15); color:var(--danger); }
 .icon-btn.copy-btn { color:var(--gold); }
 .icon-btn.copy-btn:hover { background:rgba(245,158,11,.15); color:var(--gold); }
+.icon-btn.edit-btn { color:var(--aqua); }
+.icon-btn.edit-btn:hover { background:rgba(78,205,196,.15); color:var(--aqua); }
 .weak-pill { display:inline-flex; align-items:center; gap:3px; font-size:.65rem; color:var(--weak); background:rgba(255,107,107,.1); padding:2px 7px; border-radius:10px; font-weight:700; }
 
 /* Stats */
@@ -277,6 +279,18 @@ textarea { resize:vertical; min-height:66px; line-height:1.6; }
 .toast.gold { border-color:rgba(245,158,11,.4); }
 .toast.red  { border-color:rgba(255,107,107,.5); }
 
+/* Edit modal */
+.modal-overlay { display:none; position:fixed; inset:0; background:rgba(10,13,30,.72); backdrop-filter:blur(4px); z-index:2000; align-items:center; justify-content:center; padding:20px; }
+.modal-overlay.show { display:flex; }
+.modal-box { background:var(--navy2); border:1.5px solid rgba(78,205,196,.3); border-radius:18px; padding:24px; max-width:520px; width:100%; max-height:88vh; overflow-y:auto; box-shadow:0 24px 70px rgba(0,0,0,.5); }
+.modal-title { font-family:'Playfair Display',serif; font-size:1.2rem; color:var(--aqua); margin-bottom:16px; }
+.modal-actions { display:flex; justify-content:flex-end; gap:10px; margin-top:8px; }
+.modal-btn { padding:9px 20px; border-radius:10px; border:none; cursor:pointer; font-family:'Inter',sans-serif; font-size:.86rem; font-weight:600; transition:background .2s,border-color .2s,color .2s; }
+.modal-btn.cancel-btn { background:transparent; color:var(--muted); border:1.5px solid var(--navy3); }
+.modal-btn.cancel-btn:hover { border-color:var(--cream); color:var(--cream); }
+.modal-btn.save-btn { background:var(--aqua); color:var(--navy); }
+.modal-btn.save-btn:hover { background:var(--aqua2); }
+
 @media (max-width:600px) {
   header { padding:11px 12px; }
   .logo  { font-size:1.05rem; }
@@ -304,6 +318,30 @@ textarea { resize:vertical; min-height:66px; line-height:1.6; }
 <main class="screen"        id="screen-fill"><div id="fill-content"></div></main>
 <main class="screen"        id="screen-manage"><div id="manage-content"></div></main>
 <div class="toast" id="toast"></div>
+
+<div class="modal-overlay" id="edit-overlay" onclick="if(event.target===this)closeEditModal()">
+  <div class="modal-box">
+    <div class="modal-title">✏️ 例文を編集</div>
+    <div class="form-row">
+      <div class="form-group full"><label>英語の例文</label>
+        <textarea id="edit-en" placeholder="例: She has been studying English for three years."></textarea>
+        <div class="hint-text">重要箇所: <code>[単語]</code> で囲む。例: <code>She has [been studying] English for [three years].</code></div>
+      </div>
+      <div class="form-group full"><label>日本語訳</label>
+        <textarea id="edit-jp" placeholder="例: 彼女は3年間英語を勉強し続けています。"></textarea>
+      </div>
+      <div class="form-group"><label>メモ（任意）</label><input id="edit-note" type="text" placeholder="文法ポイントや使い方など"></div>
+      <div class="form-group"><label>カテゴリ（任意）</label>
+        <input id="edit-tag" type="text" placeholder="例: 仮定法、英作文頻出" list="tag-datalist-edit">
+        <datalist id="tag-datalist-edit"></datalist>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="modal-btn cancel-btn" onclick="closeEditModal()">キャンセル</button>
+      <button class="modal-btn save-btn" onclick="saveEditCard()">💾 保存する</button>
+    </div>
+  </div>
+</div>
 
 <script>
 // ═══════════════════════════════════════════
@@ -464,6 +502,7 @@ function buildParts(card, level) {
 let studySrc   = 'all';
 let studyCount = 'all';
 let studyTag   = 'すべて';
+let studyDirection = 'en-jp'; // 'en-jp' = 表面英語→裏面日本語 / 'jp-en' = 表面日本語→裏面英語
 
 function getStudyBasePool() {
   const weakAll = allWeak();
@@ -506,6 +545,10 @@ function renderStudySetup() {
       <div class="setup-row"><span class="setup-label">対象</span><div class="chip-group">${srcChips}</div></div>
       <div class="setup-row"><span class="setup-label">カテゴリ</span><div class="chip-group">${tagChips}</div></div>
       <div class="setup-row"><span class="setup-label">枚数</span><div class="chip-group">${countChips}</div></div>
+      <div class="setup-row"><span class="setup-label">表示順</span><div class="chip-group">
+        <button class="chip ${studyDirection==='en-jp'?'sel-aqua':''}" onclick="setStudyDirection('en-jp')">🇬🇧 英語 → 🇯🇵 日本語</button>
+        <button class="chip ${studyDirection==='jp-en'?'sel-purple':''}" onclick="setStudyDirection('jp-en')">🇯🇵 日本語 → 🇬🇧 英語</button>
+      </div></div>
       <div class="setup-row"><span class="setup-label" style="color:var(--muted);font-size:.72rem">対象: <b style="color:var(--cream)">${pool.length}</b>枚 / 選択: <b style="color:var(--aqua)">${studyCount==='all'?pool.length:Math.min(+studyCount,pool.length)}</b>枚</span></div>
       <button class="start-btn" onclick="startStudy()">スタート →</button>
     </div>`;
@@ -517,6 +560,7 @@ function setSrc(mode, src) {
 }
 function setStudyTag(t)  { studyTag=t; renderStudySetup(); }
 function setStudyCount(n){ studyCount=n; renderStudySetup(); }
+function setStudyDirection(d){ studyDirection=d; renderStudySetup(); }
 
 // ═══════════════════════════════════════════
 //  STUDY – SESSION
@@ -538,6 +582,7 @@ function renderStudyCard() {
   const isB  = String(card.id).startsWith('b');
   const weak = card.weak||0;
   const pct  = Math.round(studyIdx/studyQueue.length*100);
+  const isJpFront = studyDirection==='jp-en';
 
   el.innerHTML = `
     <div class="progress-bar-wrap"><div class="progress-bar" style="width:${pct}%"></div></div>
@@ -545,14 +590,18 @@ function renderStudyCard() {
     <div class="card-scene"><div class="card" id="flip-card" onclick="flipCard()">
       <div class="card-face card-front ${weak>=2?'is-weak':''}">
         ${weak>=2?`<div class="weak-badge">🔥 苦手 ×${weak}</div>`:(isB?'<div class="builtin-badge">⭐ 旧帝大</div>':'')}
-        <div class="card-label">English</div>
-        <div class="card-english">${escHtml(cleanEn(card.en))}</div>
+        <div class="card-label">${isJpFront?'日本語':'English'}</div>
+        ${isJpFront
+          ? `<div class="card-japanese">${escHtml(card.jp)}</div>`
+          : `<div class="card-english">${escHtml(cleanEn(card.en))}</div>`}
         ${card.tag?`<div class="list-tag ${isB?'builtin-tag':''}">${escHtml(card.tag)}</div>`:''}
-        <div class="flip-hint">タップして日本語を確認</div>
+        <div class="flip-hint">タップして${isJpFront?'英語':'日本語'}を確認</div>
       </div>
       <div class="card-face card-back">
-        <div class="card-label">日本語訳</div>
-        <div class="card-japanese">${escHtml(card.jp)}</div>
+        <div class="card-label">${isJpFront?'English':'日本語訳'}</div>
+        ${isJpFront
+          ? `<div class="card-english">${escHtml(cleanEn(card.en))}</div>`
+          : `<div class="card-japanese">${escHtml(card.jp)}</div>`}
         ${card.note?`<div class="card-note">💡 ${escHtml(card.note)}</div>`:''}
       </div>
     </div></div>
@@ -920,6 +969,7 @@ function userCardHtml(c,i) {
     </div>
     <div class="list-actions">
       ${weakN>0?`<button class="icon-btn" onclick="clearWeak(${i},'user')" title="苦手をリセット">🔄</button>`:''}
+      <button class="icon-btn edit-btn" onclick="openEditModal(${i},'user')" title="編集">✏️</button>
       <button class="icon-btn" onclick="deleteCard(${i})" title="削除">🗑</button>
     </div>
   </div>`;
@@ -979,6 +1029,7 @@ function builtinCardHtml(c) {
     </div>
     <div class="list-actions">
       ${weakN>0?`<button class="icon-btn" onclick="clearWeak('${c.id}','builtin')" title="苦手をリセット">🔄</button>`:''}
+      <button class="icon-btn edit-btn" onclick="openEditModal('${c.id}','builtin')" title="編集">✏️</button>
       <button class="icon-btn copy-btn" onclick="copyToMy('${c.id}')" title="マイ例文にコピー">📋</button>
     </div>
   </div>`;
@@ -1054,6 +1105,49 @@ function addCard() {
 function deleteCard(i) {
   if(!confirm('この例文を削除しますか？'))return;
   cards.splice(i,1); saveUser(); renderManage();
+}
+
+// ═══════════════════════════════════════════
+//  EDIT MODAL（マイ例文・旧帝大の分類・内容編集）
+// ═══════════════════════════════════════════
+let editingRef  = null;   // user: 配列インデックス（数値） / builtin: id（文字列）
+let editingType = 'user'; // 'user' | 'builtin'
+
+function openEditModal(ref, type='user') {
+  editingType = type;
+  editingRef  = ref;
+  const c = type==='builtin' ? builtinCards.find(x=>x.id===ref) : cards[ref];
+  if(!c) return;
+  const list = type==='builtin' ? builtinCards : cards;
+  document.getElementById('edit-en').value   = c.en;
+  document.getElementById('edit-jp').value   = c.jp;
+  document.getElementById('edit-note').value = c.note || '';
+  document.getElementById('edit-tag').value  = c.tag  || '';
+  const tags=[...new Set(list.map(x=>x.tag).filter(Boolean))];
+  document.getElementById('tag-datalist-edit').innerHTML = tags.map(t=>`<option value="${escHtml(t)}">`).join('');
+  document.getElementById('edit-overlay').classList.add('show');
+}
+
+function closeEditModal() {
+  editingRef  = null;
+  editingType = 'user';
+  document.getElementById('edit-overlay').classList.remove('show');
+}
+
+function saveEditCard() {
+  if(editingRef===null) return;
+  const en   = document.getElementById('edit-en').value.trim();
+  const jp   = document.getElementById('edit-jp').value.trim();
+  const note = document.getElementById('edit-note').value.trim();
+  const tag  = document.getElementById('edit-tag').value.trim();
+  if(!en||!jp){alert('英語と日本語訳は必須です。');return;}
+  const c = editingType==='builtin' ? builtinCards.find(x=>x.id===editingRef) : cards[editingRef];
+  if(!c) return;
+  c.en=en; c.jp=jp; c.note=note; c.tag=tag;
+  if(editingType==='builtin') saveBuiltin(); else saveUser();
+  closeEditModal();
+  showToast('✏️ 例文を更新しました');
+  renderManage();
 }
 
 // ═══════════════════════════════════════════
