@@ -291,6 +291,30 @@ textarea { resize:vertical; min-height:66px; line-height:1.6; }
 .modal-btn.save-btn { background:var(--aqua); color:var(--navy); }
 .modal-btn.save-btn:hover { background:var(--aqua2); }
 
+/* Manual selection */
+.list-item { position:relative; }
+.select-checkbox { width:19px; height:19px; margin-right:2px; margin-top:2px; accent-color:var(--aqua); cursor:pointer; flex-shrink:0; }
+.list-item.is-selected { border-color:rgba(78,205,196,.6); background:rgba(78,205,196,.06); }
+.selection-bar { position:fixed; left:50%; bottom:18px; transform:translateX(-50%); z-index:1500; background:var(--navy2); border:1.5px solid rgba(78,205,196,.4); border-radius:14px; padding:10px 16px; display:flex; align-items:center; gap:10px; box-shadow:0 12px 40px rgba(0,0,0,.55); flex-wrap:wrap; justify-content:center; max-width:94vw; }
+.selection-bar .sel-count { font-size:.82rem; color:var(--cream); font-weight:600; white-space:nowrap; }
+.selection-bar button { font-size:.78rem; padding:7px 14px; border-radius:9px; border:none; cursor:pointer; font-weight:600; white-space:nowrap; }
+.selection-bar .sel-study-btn { background:var(--aqua); color:var(--navy); }
+.selection-bar .sel-fill-btn  { background:var(--purple); color:#fff; }
+.selection-bar .sel-clear-btn { background:transparent; color:var(--muted); border:1.5px solid var(--navy3); }
+.selection-bar .sel-clear-btn:hover { border-color:var(--cream); color:var(--cream); }
+.select-all-btn { font-size:.72rem; padding:6px 11px; border-radius:8px; border:1.5px solid var(--navy3); background:transparent; color:var(--muted); cursor:pointer; white-space:nowrap; }
+.select-all-btn:hover { border-color:var(--aqua); color:var(--aqua); }
+
+/* Backup (export / import) */
+.backup-panel { background:var(--navy2); border:1.5px solid rgba(78,205,196,.2); border-radius:14px; padding:14px 16px; margin-bottom:18px; }
+.backup-info { font-size:.76rem; color:var(--muted); line-height:1.6; margin-bottom:10px; }
+.backup-actions { display:flex; gap:10px; flex-wrap:wrap; }
+.backup-btn { padding:9px 16px; border-radius:10px; border:none; cursor:pointer; font-size:.8rem; font-weight:600; font-family:'Inter',sans-serif; transition:opacity .2s,background .2s; }
+.backup-btn.export-btn { background:var(--aqua); color:var(--navy); }
+.backup-btn.export-btn:hover { opacity:.85; }
+.backup-btn.import-btn { background:transparent; color:var(--aqua); border:1.5px solid rgba(78,205,196,.4); }
+.backup-btn.import-btn:hover { background:rgba(78,205,196,.1); }
+
 @media (max-width:600px) {
   header { padding:11px 12px; }
   .logo  { font-size:1.05rem; }
@@ -407,6 +431,75 @@ let builtinCards = migrateWeak(
 function saveUser()    { localStorage.setItem(USER_KEY,    JSON.stringify(cards)); }
 function saveBuiltin() { localStorage.setItem(BUILTIN_KEY, JSON.stringify(builtinCards)); }
 
+// ═══════════════════════════════════════════
+//  BACKUP – JSONで書き出し / 読み込み
+// ═══════════════════════════════════════════
+function exportData() {
+  const payload = {
+    app: 'Reibunanki',
+    version: 1,
+    exportedAt: new Date().toISOString(),
+    cards: cards,
+    builtinCards: builtinCards
+  };
+  const blob = new Blob([JSON.stringify(payload, null, 2)], { type:'application/json' });
+  const url  = URL.createObjectURL(blob);
+  const ts   = new Date().toISOString().slice(0,10).replace(/-/g,'');
+  const a    = document.createElement('a');
+  a.href = url;
+  a.download = `reibunanki_backup_${ts}.json`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  showToast('📦 JSONファイルを書き出しました');
+}
+
+function triggerImport() {
+  document.getElementById('import-file-input').click();
+}
+
+function handleImportFile(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    let data;
+    try {
+      data = JSON.parse(e.target.result);
+    } catch (err) {
+      alert('JSONファイルの読み込みに失敗しました。ファイル形式を確認してください。');
+      event.target.value = '';
+      return;
+    }
+    const hasUser    = Array.isArray(data && data.cards);
+    const hasBuiltin = Array.isArray(data && data.builtinCards);
+    if (!hasUser && !hasBuiltin) {
+      alert('このファイルには例文データが含まれていません。');
+      event.target.value = '';
+      return;
+    }
+    const userN    = hasUser    ? data.cards.length        : 0;
+    const builtinN = hasBuiltin ? data.builtinCards.length  : 0;
+    if (!confirm(`マイ例文 ${userN}件・旧帝大 ${builtinN}件を読み込みます。\n現在このブラウザに保存されているデータは上書きされます。よろしいですか？`)) {
+      event.target.value = '';
+      return;
+    }
+    if (hasUser)    { cards        = migrateWeak(data.cards);        saveUser(); }
+    if (hasBuiltin) { builtinCards = migrateWeak(data.builtinCards); saveBuiltin(); }
+    selectedIds.clear();
+    closeEditModal();
+    showToast('✅ データを読み込みました');
+    renderManage();
+    event.target.value = '';
+  };
+  reader.onerror = () => {
+    alert('ファイルの読み込み中にエラーが発生しました。');
+    event.target.value = '';
+  };
+  reader.readAsText(file);
+}
+
 function isWeak(c) { return (c.weak||0) >= 2; }
 function allWeak() { return [...cards, ...builtinCards].filter(isWeak); }
 
@@ -506,6 +599,7 @@ let studyDirection = 'en-jp'; // 'en-jp' = 表面英語→裏面日本語 / 'jp-
 
 function getStudyBasePool() {
   const weakAll = allWeak();
+  if (studySrc==='manual')  return getSelectedCards();
   if (studySrc==='weak')    return weakAll;
   if (studySrc==='user')    return cards;
   if (studySrc==='builtin') return builtinCards;
@@ -514,11 +608,12 @@ function getStudyBasePool() {
 
 function getStudyPool() {
   let pool = getStudyBasePool();
-  if (studyTag!=='すべて') pool = pool.filter(c=>c.tag===studyTag);
+  if (studySrc!=='manual' && studyTag!=='すべて') pool = pool.filter(c=>c.tag===studyTag);
   return pool;
 }
 
 function renderStudySetup() {
+  if (studySrc==='manual' && !selectedIds.size) studySrc='all';
   const el = document.getElementById('study-content');
   const pool   = getStudyPool();
   const weakN  = allWeak().length;
@@ -528,6 +623,7 @@ function renderStudySetup() {
   const tags = studySrc==='user'?userTags:studySrc==='builtin'?builtinTags:studySrc==='weak'?['すべて',...new Set(allWeak().map(c=>c.tag).filter(Boolean))]:allTags;
 
   const srcChips = [
+    ...(selectedIds.size?[{ v:'manual', label:`🎯 手動選択 (${selectedIds.size})`, cls:'sel-purple' }]:[]),
     { v:'all',     label:`すべて (${cards.length+builtinCards.length})`, cls:'sel-aqua' },
     { v:'user',    label:`マイ例文 (${cards.length})`,                   cls:'sel-aqua' },
     { v:'builtin', label:`旧帝大例文 (${builtinCards.length})`,          cls:'sel-gold' },
@@ -539,17 +635,19 @@ function renderStudySetup() {
   const counts=[5,10,20,50,'all'];
   const countChips = counts.map(n=>`<button class="chip ${studyCount===n?'sel-warn':''}" onclick="setStudyCount(${typeof n==='number'?n:'"all"'})">${n==='all'?'全部':n+'問'}</button>`).join('');
 
+  const isManual = studySrc==='manual';
+
   el.innerHTML = `
     <div class="setup-panel">
       <div class="setup-panel-title">📖 暗記セッション設定</div>
       <div class="setup-row"><span class="setup-label">対象</span><div class="chip-group">${srcChips}</div></div>
-      <div class="setup-row"><span class="setup-label">カテゴリ</span><div class="chip-group">${tagChips}</div></div>
-      <div class="setup-row"><span class="setup-label">枚数</span><div class="chip-group">${countChips}</div></div>
+      ${isManual?'':`<div class="setup-row"><span class="setup-label">カテゴリ</span><div class="chip-group">${tagChips}</div></div>
+      <div class="setup-row"><span class="setup-label">枚数</span><div class="chip-group">${countChips}</div></div>`}
       <div class="setup-row"><span class="setup-label">表示順</span><div class="chip-group">
         <button class="chip ${studyDirection==='en-jp'?'sel-aqua':''}" onclick="setStudyDirection('en-jp')">🇬🇧 英語 → 🇯🇵 日本語</button>
         <button class="chip ${studyDirection==='jp-en'?'sel-purple':''}" onclick="setStudyDirection('jp-en')">🇯🇵 日本語 → 🇬🇧 英語</button>
       </div></div>
-      <div class="setup-row"><span class="setup-label" style="color:var(--muted);font-size:.72rem">対象: <b style="color:var(--cream)">${pool.length}</b>枚 / 選択: <b style="color:var(--aqua)">${studyCount==='all'?pool.length:Math.min(+studyCount,pool.length)}</b>枚</span></div>
+      <div class="setup-row"><span class="setup-label" style="color:var(--muted);font-size:.72rem">対象: <b style="color:var(--cream)">${pool.length}</b>枚${isManual?'':` / 選択: <b style="color:var(--aqua)">${studyCount==='all'?pool.length:Math.min(+studyCount,pool.length)}</b>枚`}</span></div>
       <button class="start-btn" onclick="startStudy()">スタート →</button>
     </div>`;
 }
@@ -569,7 +667,7 @@ let studyQueue=[], studyIdx=0, flipped=false;
 
 function startStudy() {
   let pool = [...getStudyPool()].sort(()=>Math.random()-.5);
-  if (studyCount!=='all') pool = pool.slice(0, +studyCount);
+  if (studySrc!=='manual' && studyCount!=='all') pool = pool.slice(0, +studyCount);
   if (!pool.length) { showToast('対象の例文がありません', 'red'); return; }
   studyQueue=[...pool]; studyIdx=0; flipped=false;
   renderStudyCard();
@@ -677,6 +775,7 @@ const LV_INFO = {
 };
 
 function getFillBasePool() {
+  if(fillSrc==='manual')  return getSelectedCards();
   if(fillSrc==='weak')    return allWeak();
   if(fillSrc==='user')    return cards;
   if(fillSrc==='builtin') return builtinCards;
@@ -684,11 +783,12 @@ function getFillBasePool() {
 }
 function getFillPool() {
   let pool=getFillBasePool();
-  if(fillTag!=='すべて') pool=pool.filter(c=>c.tag===fillTag);
+  if(fillSrc!=='manual' && fillTag!=='すべて') pool=pool.filter(c=>c.tag===fillTag);
   return pool;
 }
 
 function renderFillSetup() {
+  if (fillSrc==='manual' && !selectedIds.size) fillSrc='all';
   const el = document.getElementById('fill-content');
   const pool=getFillPool();
   const weakN=allWeak().length;
@@ -698,6 +798,7 @@ function renderFillSetup() {
   const tags=fillSrc==='user'?userTags:fillSrc==='builtin'?builtinTags:fillSrc==='weak'?['すべて',...new Set(allWeak().map(c=>c.tag).filter(Boolean))]:allTags;
 
   const srcChips=[
+    ...(selectedIds.size?[{v:'manual',label:`🎯 手動選択 (${selectedIds.size})`,cls:'sel-purple'}]:[]),
     {v:'all',label:`すべて (${cards.length+builtinCards.length})`,cls:'sel-purple'},
     {v:'user',label:`マイ例文 (${cards.length})`,cls:'sel-purple'},
     {v:'builtin',label:`旧帝大例文 (${builtinCards.length})`,cls:'sel-gold'},
@@ -711,14 +812,16 @@ function renderFillSetup() {
 
   const lvChips=[1,2,3].map(lv=>`<button class="chip ${fillLevel===lv?'sel-purple':''}" onclick="setFillLevel(${lv})" data-lv="${lv}">${LV_INFO[lv].icon} Lv${lv} ${LV_INFO[lv].label}</button>`).join('');
 
+  const isManual = fillSrc==='manual';
+
   el.innerHTML=`
     <div class="setup-panel">
       <div class="setup-panel-title">✏️ 穴埋めセッション設定</div>
       <div class="setup-row"><span class="setup-label">対象</span><div class="chip-group">${srcChips}</div></div>
-      <div class="setup-row"><span class="setup-label">カテゴリ</span><div class="chip-group">${tagChips}</div></div>
-      <div class="setup-row"><span class="setup-label">枚数</span><div class="chip-group">${countChips}</div></div>
+      ${isManual?'':`<div class="setup-row"><span class="setup-label">カテゴリ</span><div class="chip-group">${tagChips}</div></div>
+      <div class="setup-row"><span class="setup-label">枚数</span><div class="chip-group">${countChips}</div></div>`}
       <div class="setup-row"><span class="setup-label">難易度</span><div class="chip-group">${lvChips}</div></div>
-      <div class="setup-row"><span class="setup-label" style="color:var(--muted);font-size:.72rem">対象: <b style="color:var(--cream)">${pool.length}</b>枚 / 選択: <b style="color:var(--purple)">${fillCount==='all'?pool.length:Math.min(+fillCount,pool.length)}</b>枚</span></div>
+      <div class="setup-row"><span class="setup-label" style="color:var(--muted);font-size:.72rem">対象: <b style="color:var(--cream)">${pool.length}</b>枚${isManual?'':` / 選択: <b style="color:var(--purple)">${fillCount==='all'?pool.length:Math.min(+fillCount,pool.length)}</b>枚`}</span></div>
       <button class="start-btn fill-mode" onclick="startFill()">スタート →</button>
     </div>`;
 }
@@ -734,7 +837,7 @@ let fillQueue=[], fillIdx=0;
 
 function startFill() {
   let pool=[...getFillPool()].sort(()=>Math.random()-.5);
-  if(fillCount!=='all') pool=pool.slice(0,+fillCount);
+  if(fillSrc!=='manual' && fillCount!=='all') pool=pool.slice(0,+fillCount);
   if(!pool.length){showToast('対象の例文がありません','red');return;}
   fillQueue=[...pool]; fillIdx=0;
   renderFillCard();
@@ -868,12 +971,57 @@ let builtinSearch   = '';
 let userSearch      = '';
 let userFilterTag   = 'すべて';
 
+// ─ 手動選択（この例文だけで暗記・穴埋め）─
+let selectedIds = new Set();
+
+function isSelected(id) { return selectedIds.has(String(id)); }
+
+function toggleSelect(id) {
+  id = String(id);
+  if (selectedIds.has(id)) selectedIds.delete(id); else selectedIds.add(id);
+  renderManage();
+}
+
+function selectAllFiltered(ids) {
+  const allSelected = ids.every(id=>selectedIds.has(String(id)));
+  ids.forEach(id => { if (allSelected) selectedIds.delete(String(id)); else selectedIds.add(String(id)); });
+  renderManage();
+}
+
+function clearSelection() { selectedIds.clear(); renderManage(); }
+
+function getSelectedCards() {
+  return [...cards, ...builtinCards].filter(c => selectedIds.has(String(c.id)));
+}
+
+function startManualStudy() {
+  if (!selectedIds.size) { showToast('例文が選択されていません', 'red'); return; }
+  studySrc = 'manual';
+  showScreen('study');
+  renderStudySetup();
+}
+
+function startManualFill() {
+  if (!selectedIds.size) { showToast('例文が選択されていません', 'red'); return; }
+  fillSrc = 'manual';
+  showScreen('fill');
+  renderFillSetup();
+}
+
 function renderManage() {
   const el=document.getElementById('manage-content');
   const weakN=allWeak().length;
   el.innerHTML=`
     <div class="section-title">例文を追加・管理</div>
     <div class="section-sub">マイ例文の追加と旧帝大プリセット例文の確認ができます</div>
+    <div class="backup-panel">
+      <div class="backup-info">📦 データはこの端末のブラウザ内だけに保存されています。ホーム画面に追加したアプリでは保存領域が分かれて消えてしまうことがあるため、こまめにJSONで書き出しておくと安心です。</div>
+      <div class="backup-actions">
+        <button class="backup-btn export-btn" onclick="exportData()">⬇️ JSONで書き出す</button>
+        <button class="backup-btn import-btn" onclick="triggerImport()">⬆️ JSONを読み込む</button>
+        <input type="file" id="import-file-input" accept="application/json,.json" style="display:none" onchange="handleImportFile(event)">
+      </div>
+    </div>
     <div class="manage-tabs">
       <button class="manage-tab ${manageTab==='user'?'active-user':''}"    onclick="switchTab('user')">📝 マイ例文 (${cards.length})</button>
       <button class="manage-tab ${manageTab==='builtin'?'active-builtin':''}" onclick="switchTab('builtin')">⭐ 旧帝大 (${builtinCards.length})</button>
@@ -881,7 +1029,14 @@ function renderManage() {
     </div>
     <div id="tab-body">
       ${manageTab==='user'?renderUserTab():manageTab==='builtin'?renderBuiltinTab():renderWeakTab()}
-    </div>`;
+    </div>
+    ${selectedIds.size>0?`
+    <div class="selection-bar">
+      <span class="sel-count">☑ ${selectedIds.size}件を選択中</span>
+      <button class="sel-study-btn" onclick="startManualStudy()">📖 この例文だけ暗記する</button>
+      <button class="sel-fill-btn"  onclick="startManualFill()">✏️ この例文だけ穴埋めする</button>
+      <button class="sel-clear-btn" onclick="clearSelection()">選択解除</button>
+    </div>`:''}`;
 }
 
 function switchTab(tab) { manageTab=tab; renderManage(); }
@@ -924,6 +1079,7 @@ function renderUserTab() {
       ${tags.map(t=>`<option value="${escHtml(t)}" ${t===userFilterTag?'selected':''}>${escHtml(t)}</option>`).join('')}
     </select>
     <span class="count-badge">${filtered.length}件</span>
+    <button class="select-all-btn" onclick='selectAllFiltered(${JSON.stringify(filtered.map(c=>String(c.id)))})'>☑ 表示中を全選択</button>
   </div>`;
 
   // グループ表示（カテゴリでまとめる）
@@ -956,7 +1112,9 @@ function renderUserTab() {
 function userCardHtml(c,i) {
   const displayEn=c.en.replace(/\[([^\]]+)\]/g,'<span class="manual-blank">[$1]</span>');
   const weakN=c.weak||0;
-  return `<div class="list-item ${isWeak(c)?'weak-item':''}">
+  const sel=isSelected(c.id);
+  return `<div class="list-item ${isWeak(c)?'weak-item':''} ${sel?'is-selected':''}">
+    <input type="checkbox" class="select-checkbox" ${sel?'checked':''} onchange="toggleSelect('${c.id}')" title="選択して手動モードに使う">
     <div class="list-item-content">
       <div class="list-en">${displayEn}</div>
       <div class="list-jp">${escHtml(c.jp)}</div>
@@ -994,6 +1152,7 @@ function renderBuiltinTab() {
       ${tags.map(t=>`<option value="${escHtml(t)}" ${t===builtinFilterTag?'selected':''}>${escHtml(t)}</option>`).join('')}
     </select>
     <span class="count-badge">${filtered.length}件</span>
+    <button class="select-all-btn" onclick='selectAllFiltered(${JSON.stringify(filtered.map(c=>String(c.id)))})'>☑ 表示中を全選択</button>
   </div>`;
 
   // グループ表示
@@ -1016,7 +1175,9 @@ function renderBuiltinTab() {
 function builtinCardHtml(c) {
   const displayEn=c.en.replace(/\[([^\]]+)\]/g,'<span class="manual-blank">[$1]</span>');
   const weakN=c.weak||0;
-  return `<div class="list-item builtin-item ${isWeak(c)?'weak-item':''}">
+  const sel=isSelected(c.id);
+  return `<div class="list-item builtin-item ${isWeak(c)?'weak-item':''} ${sel?'is-selected':''}">
+    <input type="checkbox" class="select-checkbox" ${sel?'checked':''} onchange="toggleSelect('${c.id}')" title="選択して手動モードに使う">
     <div class="list-item-content">
       <div class="list-en">${displayEn}</div>
       <div class="list-jp">${escHtml(c.jp)}</div>
